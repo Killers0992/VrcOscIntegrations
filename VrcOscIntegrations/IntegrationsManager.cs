@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Razor;
-using Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation;
 using Microsoft.Extensions.FileProviders;
 
 namespace VrcOscIntegrations
@@ -49,10 +48,7 @@ namespace VrcOscIntegrations
                     var assembly = integration.GetType().Assembly;
 
                     services.AddControllersWithViews()
-                        .AddApplicationPart(assembly)
-                        .AddRazorRuntimeCompilation();
-
-                    registeredAssemblies.Add(assembly);
+                        .AddApplicationPart(assembly);
 
                     integration.Status = IntegrationStatus.Registered;
                 }
@@ -65,12 +61,6 @@ namespace VrcOscIntegrations
                 Logger.Info("Loader", $"[{x + 1}/{integrationsToEnable.Length}] Registered integration \"{integration.Name}\" ({integration.Version}).", Color.Crimson, Color.White);
                 enabled++;
             }
-
-            services.Configure<MvcRazorRuntimeCompilationOptions>(options =>
-            {
-                foreach(var assembly in registeredAssemblies)
-                    options.FileProviders.Add(new EmbeddedFileProvider(assembly));
-            });
 
             Logger.Info("Loader", $"Registered {enabled}/{integrationsToEnable.Length} integrations.", Color.Crimson, Color.White);
         }

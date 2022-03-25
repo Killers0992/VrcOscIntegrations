@@ -22,7 +22,6 @@
 
   <ItemGroup>
     <PackageReference Include="CoreOSC" Version="1.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.3" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="ReaLTaiizor" Version="3.7.8.5" />
     <PackageReference Include="YamlDotNet" Version="11.2.1" />
