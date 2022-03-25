@@ -1,3 +1,5 @@
+using Newtonsoft.Json;
+
 namespace VrcOscIntegrations
 {
     internal static class Program

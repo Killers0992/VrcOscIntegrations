@@ -12,24 +12,11 @@ namespace VrcOscIntegrations.Interface
     {
         public static event EventHandler<ConsoleLogArgs> LogReceived;
 
-        public static IntegrationHeader Header;
-
         public static List<ConsoleLogArgs> PendingLogs = new List<ConsoleLogArgs>();
 
-        public static List<IntegrationModel> BrowserIntegrationItems = new List<IntegrationModel>()
-        {
-            new IntegrationModel()
-            {
-                Id = "killers0992.twitch-integration",
-                Name = "Twitch Integration",
-                Description = "Manipulate your avatar thru twitch bot.",
-                Author = "Killers0992",
-                Image = "https://raw.githubusercontent.com/taskinoz/source-twitch-integration/master/icon/SourceTwitchIntegration.png",
-                GithubRepo = "https://github.com/Killers0992/TwitchVrcAvatarOSC",
-                VersionFile = "https://raw.githubusercontent.com/Killers0992/TwitchVrcAvatarOSC/master/TwitchVrcAvatarOSC/version.json",
-                IncludesDependencies = true,
-            }
-        };
+        public static List<IntegrationModel> BrowserIntegrationItems = new List<IntegrationModel>();
+
+        public static MainPanel singleton;
 
         public static void OnReceiveLog(ConsoleLogArgs e)
         {
@@ -41,6 +28,7 @@ namespace VrcOscIntegrations.Interface
 
         public MainPanel()
         {
+            singleton = this;
             InitializeComponent();
             LogReceived += new EventHandler<ConsoleLogArgs>(OnReceiveConsoleLog);
             debugSwitch.Switched = MainConfig.Instance.Debug;
@@ -71,7 +59,7 @@ namespace VrcOscIntegrations.Interface
             RefreshIntegrationsBrowser();
         }
 
-        public void RefreshIntegrationsBrowser(string filters = null)
+        public void RefreshIntegrationsBrowser()
         {
             var avaliableAddons = BrowserIntegrationItems
                 .Select(p => p.Id);
@@ -109,10 +97,8 @@ namespace VrcOscIntegrations.Interface
             }
 
 
-            if (filters == null) return;
-
             //Apply filters
-            if (filters == string.Empty)
+            if (integrationsBrowserSearch.Text == string.Empty)
                 foreach (IntegrationItem control in integrationsBrowser.Controls)
                     control.Visible = true;
             else
@@ -187,7 +173,7 @@ namespace VrcOscIntegrations.Interface
 
         private void integrationsBrowserSearch_TextChanged(object sender, EventArgs e)
         {
-            RefreshIntegrationsBrowser(integrationsBrowserSearch.Text);
+            RefreshIntegrationsBrowser();
         }
     }
 }

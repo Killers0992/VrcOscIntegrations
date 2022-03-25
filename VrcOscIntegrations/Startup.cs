@@ -13,6 +13,7 @@ namespace VrcOscIntegrations
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddHostedService<OscActions>();
+            services.AddHostedService<IntegrationsFetch>();
             services.AddRazorPages();
 
             IntegrationsManager.Manager.RegisterIntegrations(ref services);

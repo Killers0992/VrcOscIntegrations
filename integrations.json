@@ -1,0 +1,12 @@
+[
+  {
+    "Id": "killers0992.twitch-integration",
+    "Name": "Twitch Integration",
+    "Description": "Manipulate your avatar thru twitch bot.",
+    "Author": "Killers0992",
+    "Image": "https://raw.githubusercontent.com/taskinoz/source-twitch-integration/master/icon/SourceTwitchIntegration.png",
+    "GithubRepo": "https://github.com/Killers0992/TwitchIntegration",
+    "VersionFile": "https://raw.githubusercontent.com/Killers0992/TwitchIntegration/master/TwitchIntegration/version.json",
+    "IncludesDependencies": true
+  }
+]

@@ -1,7 +1,12 @@
-﻿namespace VrcOscIntegrations.Interface.Entries
+﻿using Newtonsoft.Json;
+using System.IO.Compression;
+
+namespace VrcOscIntegrations.Interface.Entries
 {
     public partial class IntegrationBrowserItem : PoisonUserControl
     {
+        HttpClient _client = new HttpClient();
+
         public IntegrationBrowserItem()
         {
             InitializeComponent();
@@ -114,7 +119,67 @@
 
         private void interactionButton_Click(object sender, EventArgs e)
         {
+            var browserItem = MainPanel.BrowserIntegrationItems.FirstOrDefault(p => p.Id == Id);
 
+            if (browserItem == null) return;
+
+            var result = _client.GetAsync(browserItem.VersionFile).Result;
+            if (!result.IsSuccessStatusCode)
+            {
+                Logger.Error("Browser", $"Failed getting verion file for integration {IntegrationName}! ( network failure )", Color.White, Color.White);
+                return;
+            }
+            var content = result.Content.ReadAsStringAsync().Result;
+
+            var versionObject = JsonConvert.DeserializeObject<IntegrationVersionInfo>(content);
+
+            if (versionObject == null)
+            {
+                Logger.Error("Browser", $"Failed deserializing version file {IntegrationName}!", Color.White, Color.White);
+                return;
+            }
+
+            if (!string.IsNullOrEmpty(versionObject.DependenciesFileName))
+            {
+                var depFile = $"{browserItem.GithubRepo}/releases/download/{versionObject.Version}/{versionObject.DependenciesFileName}.zip";
+
+                result = _client.GetAsync(depFile).Result;
+                if (!result.IsSuccessStatusCode)
+                {
+                    Logger.Error("Browser", $"Failed downloading dependencies for {IntegrationName}! ( network failure )", Color.White, Color.White);
+                    return;
+                }
+
+                var tempFileDep = $"./Dependencies_{DateTime.Now.Ticks}.zip";
+
+                var bytes = result.Content.ReadAsByteArrayAsync().Result;
+                File.WriteAllBytes(tempFileDep, bytes);
+
+                Logger.Info("Browser", $"Extract all dependencies for {IntegrationName} into dependencies folder...", Color.White, Color.White);
+
+                using (ZipArchive archive = ZipFile.OpenRead(tempFileDep))
+                {
+                    foreach (ZipArchiveEntry entry in archive.Entries.Where(p => p.Name.EndsWith(".dll")))
+                    {
+                        entry.ExtractToFile($"./Dependencies/{entry.Name}.dll");
+                    }
+                }
+                Logger.Info("Browser", $"Extracted all dependencies for {IntegrationName} into dependencies folder!", Color.White, Color.White);
+
+                File.Delete(tempFileDep);
+            }
+
+            var mainFile = $"{browserItem.GithubRepo}/releases/download/{versionObject.Version}/{versionObject.IntegrationFileName}.dll";
+
+            result = _client.GetAsync(mainFile).Result;
+            if (!result.IsSuccessStatusCode)
+            {
+                Logger.Error("Browser", $"Failed downloading main assembly for {IntegrationName}! ( network failure )", Color.White, Color.White);
+                return;
+            }
+
+            var bytes2 = result.Content.ReadAsByteArrayAsync().Result;
+            File.WriteAllBytes($"./Integrations/{versionObject.IntegrationFileName}", bytes2);
         }
     }
 }
