@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "VrcOscIntegrations": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:64970;http://localhost:64971"
+    }
+  }
+}

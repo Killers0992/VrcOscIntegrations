@@ -1,0 +1,14 @@
+# More information in console for debugging purpose.
+debug: true
+# Auto updates for installed integrations.
+auto_updater: true
+# Information needed for connecting with OSC running in VRC.
+osc_server:
+# If you are using that app on same machine as VRChat use "127.0.0.1" if its quest2 check IP of that device in router.
+  ip_address: 127.0.0.1
+  # By default port "9999" is used but if you changed IN port in startup arguments of VRChat then that port needs to be same.
+  port: 9999
+# Web server running on localhost.
+web_server:
+# Url used for handling web requests.
+  url: http://localhost:3000
