@@ -12,11 +12,11 @@ namespace VrcOscIntegrations
             var window = ConsoleWindow.GetConsoleWindow();
             ConsoleWindow.ShowWindow(window, 0);
 
-            if (!Directory.Exists("Integrations"))
-                Directory.CreateDirectory("Integrations");
+            if (!Directory.Exists(Path.Combine(AppContext.BaseDirectory, "Integrations")))
+                Directory.CreateDirectory(Path.Combine(AppContext.BaseDirectory, "Integrations"));
 
-            if (!Directory.Exists("Dependencies"))
-                Directory.CreateDirectory("Dependencies");
+            if (!Directory.Exists(Path.Combine(AppContext.BaseDirectory, "Dependencies")))
+                Directory.CreateDirectory(Path.Combine(AppContext.BaseDirectory, "Dependencies"));
 
             ApplicationConfiguration.Initialize();
 

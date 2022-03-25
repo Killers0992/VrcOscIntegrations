@@ -8,16 +8,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Content Remove="Views\TwitchAuth\TwitchResponse.cshtml" />
-    </ItemGroup>
-
-    <ItemGroup>
       <None Remove=".gitignore" />
       <None Remove="config.yml" />
     </ItemGroup>
 
     <ItemGroup>
-      <None Include="Views\TwitchAuth\TwitchResponse.cshtml" />
+      <None Include="Views\Auth\TwitchResponse.cshtml" />
     </ItemGroup>
 
   <ItemGroup>

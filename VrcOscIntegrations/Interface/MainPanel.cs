@@ -18,9 +18,11 @@ namespace VrcOscIntegrations.Interface
 
         public static MainPanel singleton;
 
+        public static bool IsLoaded;
+
         public static void OnReceiveLog(ConsoleLogArgs e)
         {
-            if (LogReceived != null)
+            if (LogReceived != null && IsLoaded)
                 LogReceived(null, e);
             else
                 PendingLogs.Add(e);
@@ -32,15 +34,9 @@ namespace VrcOscIntegrations.Interface
             InitializeComponent();
             LogReceived += new EventHandler<ConsoleLogArgs>(OnReceiveConsoleLog);
             debugSwitch.Switched = MainConfig.Instance.Debug;
-            foreach(var e in PendingLogs)
+            foreach(var e in PendingLogs.ToArray())
                 AddConsoleLog(e.Time, e.Type, e.TagColor, e.TagMessage, e.MessageColor, e.Message);
             PendingLogs.Clear();
-
-            myIntegrationsTab.Controls.Add(new IntegrationHeader()
-            {
-                IntegrationName = string.Empty,
-                Visible = false,
-            });
 
             debugSwitch.SwitchedChanged += OnDebugChanged;
 
@@ -65,12 +61,12 @@ namespace VrcOscIntegrations.Interface
                 .Select(p => p.Id);
 
             var integrationsInBrowser = integrationsBrowser.Controls
-                .Cast<IntegrationItem>()
+                .Cast<IntegrationBrowserItem>()
                 .Select(p => p.Id);
 
             //Remove not existing integrations from browser.
             foreach(var removeIntegration in integrationsBrowser.Controls
-                .Cast<IntegrationItem>()
+                .Cast<IntegrationBrowserItem>()
                 .Where(p => !avaliableAddons.Contains(p.Id)))
             {
                 integrationsBrowser.Controls.Remove(removeIntegration);
@@ -98,16 +94,20 @@ namespace VrcOscIntegrations.Interface
 
 
             //Apply filters
-            if (integrationsBrowserSearch.Text == string.Empty)
-                foreach (IntegrationItem control in integrationsBrowser.Controls)
+            if (string.IsNullOrEmpty(integrationsBrowserSearch.Text))
+            {
+                foreach (IntegrationBrowserItem control in integrationsBrowser.Controls)
                     control.Visible = true;
+            }
             else
-                foreach(IntegrationItem control in integrationsBrowser.Controls)
+            {
+                foreach (IntegrationBrowserItem control in integrationsBrowser.Controls)
                     if (control.IntegrationName.ToLower().Replace(" ", "") == integrationsBrowserSearch.Text.ToLower().Replace(" ", "") ||
     control.IntegrationName.ToLower().Replace(" ", "").Contains(integrationsBrowserSearch.Text.ToLower().Replace(" ", "")))
                         control.Visible = true;
                     else
                         control.Visible = false;
+            }
         }
 
         void OnDebugChanged(object sender)
@@ -169,6 +169,8 @@ namespace VrcOscIntegrations.Interface
 
         private void MainPanel_Load(object sender, EventArgs e)
         {
+            IsLoaded = true;
+            RefreshIntegrationsBrowser();
         }
 
         private void integrationsBrowserSearch_TextChanged(object sender, EventArgs e)

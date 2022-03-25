@@ -10,7 +10,6 @@ namespace VrcOscIntegrations.Services
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            await Task.Delay(5000);
             while (true)
             {
                 Logger.Info("Browser", "Fetch avaliable integrations...", Color.White, Color.White);
@@ -24,7 +23,6 @@ namespace VrcOscIntegrations.Services
                 var content = await result.Content.ReadAsStringAsync();
 
                 MainPanel.BrowserIntegrationItems = JsonConvert.DeserializeObject<List<IntegrationModel>>(content);
-                MainPanel.singleton.RefreshIntegrationsBrowser();
                 Logger.Info("Browser", "Loaded avaliable integrations.", Color.White, Color.White);
 
                 await Task.Delay(30000);

@@ -142,7 +142,8 @@ namespace VrcOscIntegrations.Interface.Entries
             if (!string.IsNullOrEmpty(versionObject.DependenciesFileName))
             {
                 var depFile = $"{browserItem.GithubRepo}/releases/download/{versionObject.Version}/{versionObject.DependenciesFileName}.zip";
-
+                var depTargetFile = Path.Combine(AppContext.BaseDirectory, "Dependencies", $"{versionObject.DependenciesFileName}.zip");
+                
                 result = _client.GetAsync(depFile).Result;
                 if (!result.IsSuccessStatusCode)
                 {
@@ -150,26 +151,28 @@ namespace VrcOscIntegrations.Interface.Entries
                     return;
                 }
 
-                var tempFileDep = $"./Dependencies_{DateTime.Now.Ticks}.zip";
-
                 var bytes = result.Content.ReadAsByteArrayAsync().Result;
-                File.WriteAllBytes(tempFileDep, bytes);
+                File.WriteAllBytes(depTargetFile, bytes);
 
                 Logger.Info("Browser", $"Extract all dependencies for {IntegrationName} into dependencies folder...", Color.White, Color.White);
 
-                using (ZipArchive archive = ZipFile.OpenRead(tempFileDep))
+                using (ZipArchive archive = ZipFile.OpenRead(depTargetFile))
                 {
                     foreach (ZipArchiveEntry entry in archive.Entries.Where(p => p.Name.EndsWith(".dll")))
                     {
-                        entry.ExtractToFile($"./Dependencies/{entry.Name}.dll");
+                        var depTargetFile2 = Path.Combine(AppContext.BaseDirectory, "Dependencies", $"{entry.Name}.dll");
+
+                        if (!File.Exists(depTargetFile2))
+                            entry.ExtractToFile(depTargetFile2);
                     }
                 }
                 Logger.Info("Browser", $"Extracted all dependencies for {IntegrationName} into dependencies folder!", Color.White, Color.White);
 
-                File.Delete(tempFileDep);
+                File.Delete(depTargetFile);
             }
 
             var mainFile = $"{browserItem.GithubRepo}/releases/download/{versionObject.Version}/{versionObject.IntegrationFileName}.dll";
+            var mainFileTarget = Path.Combine(AppContext.BaseDirectory, "Integrations", $"{versionObject.IntegrationFileName}.dll");
 
             result = _client.GetAsync(mainFile).Result;
             if (!result.IsSuccessStatusCode)
@@ -179,7 +182,8 @@ namespace VrcOscIntegrations.Interface.Entries
             }
 
             var bytes2 = result.Content.ReadAsByteArrayAsync().Result;
-            File.WriteAllBytes($"./Integrations/{versionObject.IntegrationFileName}", bytes2);
+            File.WriteAllBytes(mainFileTarget, bytes2);
+            Logger.Info("Browser", $"Saved main assembly for integration {IntegrationName} into integrations folder!", Color.White, Color.White);
         }
     }
 }

@@ -100,8 +100,7 @@
 
         public void LoadIntegrations()
         {
-            MainPath = AppDomain.CurrentDomain.BaseDirectory;
-            Console.WriteLine(MainPath);
+            MainPath = AppContext.BaseDirectory;
             LoadDependencies(Path.Combine(MainPath, "Dependencies"));
             LoadIntegrationAssemblies(Path.Combine(MainPath, "Integrations"));
         }

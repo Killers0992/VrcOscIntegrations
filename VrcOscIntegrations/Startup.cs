@@ -14,9 +14,10 @@ namespace VrcOscIntegrations
         {
             services.AddHostedService<OscActions>();
             services.AddHostedService<IntegrationsFetch>();
-            services.AddRazorPages();
 
             IntegrationsManager.Manager.RegisterIntegrations(ref services);
+
+            services.AddControllersWithViews();
         }
 
         public void Configure(IApplicationBuilder app, IHostEnvironment env)
@@ -27,7 +28,6 @@ namespace VrcOscIntegrations
             {
                 ends.MapControllers();
             });
-
             IntegrationsManager.Manager.EnableIntegrations();
         }
     }
