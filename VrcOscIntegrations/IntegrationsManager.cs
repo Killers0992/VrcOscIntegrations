@@ -1,8 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.ApplicationParts;
-using Microsoft.AspNetCore.Mvc.Razor;
-using Microsoft.Extensions.FileProviders;
-
-namespace VrcOscIntegrations
+﻿namespace VrcOscIntegrations
 {
     public class IntegrationsManager
     {
