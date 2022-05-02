@@ -36,6 +36,7 @@ namespace VrcOscIntegrations.Interface
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainPanel));
             this.main = new ReaLTaiizor.Controls.PoisonTabControl();
             this.homeTab = new ReaLTaiizor.Controls.PoisonTabPage();
+            this.bigLabel1 = new ReaLTaiizor.Controls.BigLabel();
             this.integrationsBrowserTab = new ReaLTaiizor.Controls.PoisonTabPage();
             this.integrationsBrowser = new System.Windows.Forms.FlowLayoutPanel();
             this.integrationsBrowserSearch = new ReaLTaiizor.Controls.PoisonTextBox();
@@ -54,6 +55,7 @@ namespace VrcOscIntegrations.Interface
             this.materialCheckBox1 = new ReaLTaiizor.Controls.MaterialCheckBox();
             this.materialCheckBox2 = new ReaLTaiizor.Controls.MaterialCheckBox();
             this.main.SuspendLayout();
+            this.homeTab.SuspendLayout();
             this.integrationsBrowserTab.SuspendLayout();
             this.myIntegrationsTab.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -83,6 +85,7 @@ namespace VrcOscIntegrations.Interface
             // homeTab
             // 
             this.homeTab.AutoScroll = true;
+            this.homeTab.Controls.Add(this.bigLabel1);
             this.homeTab.HorizontalScrollbar = true;
             this.homeTab.HorizontalScrollbarBarColor = true;
             this.homeTab.HorizontalScrollbarHighlightOnWheel = false;
@@ -100,6 +103,20 @@ namespace VrcOscIntegrations.Interface
             this.homeTab.VerticalScrollbarHighlightOnWheel = false;
             this.homeTab.VerticalScrollbarSize = 10;
             // 
+            // bigLabel1
+            // 
+            this.bigLabel1.AutoSize = true;
+            this.bigLabel1.BackColor = System.Drawing.Color.Transparent;
+            this.bigLabel1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.bigLabel1.Font = new System.Drawing.Font("Segoe UI", 25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.bigLabel1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(80)))), ((int)(((byte)(80)))));
+            this.bigLabel1.Location = new System.Drawing.Point(25, 25);
+            this.bigLabel1.Name = "bigLabel1";
+            this.bigLabel1.Size = new System.Drawing.Size(634, 46);
+            this.bigLabel1.TabIndex = 2;
+            this.bigLabel1.Text = "Info about usage can be found on github";
+            this.bigLabel1.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
             // integrationsBrowserTab
             // 
             this.integrationsBrowserTab.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
@@ -109,9 +126,9 @@ namespace VrcOscIntegrations.Interface
             this.integrationsBrowserTab.HorizontalScrollbarBarColor = true;
             this.integrationsBrowserTab.HorizontalScrollbarHighlightOnWheel = false;
             this.integrationsBrowserTab.HorizontalScrollbarSize = 10;
-            this.integrationsBrowserTab.Location = new System.Drawing.Point(4, 38);
+            this.integrationsBrowserTab.Location = new System.Drawing.Point(4, 35);
             this.integrationsBrowserTab.Name = "integrationsBrowserTab";
-            this.integrationsBrowserTab.Size = new System.Drawing.Size(874, 355);
+            this.integrationsBrowserTab.Size = new System.Drawing.Size(874, 358);
             this.integrationsBrowserTab.Style = ReaLTaiizor.Enum.Poison.ColorStyle.Lime;
             this.integrationsBrowserTab.TabIndex = 4;
             this.integrationsBrowserTab.Text = "Integrations Browser";
@@ -174,9 +191,9 @@ namespace VrcOscIntegrations.Interface
             this.myIntegrationsTab.HorizontalScrollbarBarColor = true;
             this.myIntegrationsTab.HorizontalScrollbarHighlightOnWheel = false;
             this.myIntegrationsTab.HorizontalScrollbarSize = 10;
-            this.myIntegrationsTab.Location = new System.Drawing.Point(4, 38);
+            this.myIntegrationsTab.Location = new System.Drawing.Point(4, 35);
             this.myIntegrationsTab.Name = "myIntegrationsTab";
-            this.myIntegrationsTab.Size = new System.Drawing.Size(874, 355);
+            this.myIntegrationsTab.Size = new System.Drawing.Size(874, 358);
             this.myIntegrationsTab.Style = ReaLTaiizor.Enum.Poison.ColorStyle.Teal;
             this.myIntegrationsTab.TabIndex = 5;
             this.myIntegrationsTab.Text = "My Integrations";
@@ -198,7 +215,7 @@ namespace VrcOscIntegrations.Interface
             this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 11.48913F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 88.51087F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(874, 355);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(874, 358);
             this.tableLayoutPanel1.TabIndex = 2;
             // 
             // header
@@ -209,7 +226,7 @@ namespace VrcOscIntegrations.Interface
             this.header.IntegrationName = null;
             this.header.Location = new System.Drawing.Point(3, 3);
             this.header.Name = "header";
-            this.header.Size = new System.Drawing.Size(868, 34);
+            this.header.Size = new System.Drawing.Size(868, 35);
             this.header.Style = ReaLTaiizor.Enum.Poison.ColorStyle.Teal;
             this.header.TabIndex = 0;
             this.header.Theme = ReaLTaiizor.Enum.Poison.ThemeStyle.Dark;
@@ -220,9 +237,9 @@ namespace VrcOscIntegrations.Interface
             // 
             this.myIntegrations.Dock = System.Windows.Forms.DockStyle.Fill;
             this.myIntegrations.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.myIntegrations.Location = new System.Drawing.Point(3, 43);
+            this.myIntegrations.Location = new System.Drawing.Point(3, 44);
             this.myIntegrations.Name = "myIntegrations";
-            this.myIntegrations.Size = new System.Drawing.Size(868, 309);
+            this.myIntegrations.Size = new System.Drawing.Size(868, 311);
             this.myIntegrations.TabIndex = 1;
             this.myIntegrations.WrapContents = false;
             // 
@@ -379,6 +396,8 @@ namespace VrcOscIntegrations.Interface
             this.TransparencyKey = System.Drawing.Color.Empty;
             this.Load += new System.EventHandler(this.MainPanel_Load);
             this.main.ResumeLayout(false);
+            this.homeTab.ResumeLayout(false);
+            this.homeTab.PerformLayout();
             this.integrationsBrowserTab.ResumeLayout(false);
             this.myIntegrationsTab.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
@@ -411,5 +430,6 @@ namespace VrcOscIntegrations.Interface
         private TableLayoutPanel tableLayoutPanel1;
         private IntegrationHeader header;
         private FlowLayoutPanel myIntegrations;
+        private BigLabel bigLabel1;
     }
 }

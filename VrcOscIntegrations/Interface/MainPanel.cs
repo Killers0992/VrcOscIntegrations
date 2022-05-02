@@ -52,6 +52,7 @@ namespace VrcOscIntegrations.Interface
                 myIntegrations.Controls.Add(inter);
             }
 
+            integrationsBrowserSearch.Text = string.Empty;
             RefreshIntegrationsBrowser();
         }
 

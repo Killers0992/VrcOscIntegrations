@@ -26,7 +26,7 @@ namespace VrcOscIntegrations
             CancellationTokenSource cts = new CancellationTokenSource();
 
             WebHost.CreateDefaultBuilder(args)
-                //.ConfigureLogging(p => p.SetMinimumLevel(LogLevel.Error))
+                .ConfigureLogging(p => p.SetMinimumLevel(LogLevel.Error))
                 .UseUrls(MainConfig.Instance.WebServer.Url)
                 .UseStartup<Startup>()
                 .Build()
