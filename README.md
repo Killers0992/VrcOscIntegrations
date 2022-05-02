@@ -30,6 +30,4 @@ Used dependencies:
 
 ``CoreOSC`` v1.0.0
 
-How setup new project?
-
-1.
+Template project can be found there: https://github.com/Killers0992/TemplateIntegration
