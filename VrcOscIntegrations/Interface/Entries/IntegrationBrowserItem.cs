@@ -184,6 +184,7 @@ namespace VrcOscIntegrations.Interface.Entries
             var bytes2 = result.Content.ReadAsByteArrayAsync().Result;
             File.WriteAllBytes(mainFileTarget, bytes2);
             Logger.Info("Browser", $"Saved main assembly for integration {IntegrationName} into integrations folder!", Color.White, Color.White);
+            MessageBox.Show($"Installed integration {IntegrationName}, restart application to load new installed integration!");
         }
     }
 }

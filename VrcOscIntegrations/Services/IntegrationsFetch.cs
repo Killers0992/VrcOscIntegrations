@@ -24,11 +24,8 @@ namespace VrcOscIntegrations.Services
 
                 MainPanel.BrowserIntegrationItems = JsonConvert.DeserializeObject<List<IntegrationModel>>(content);
                 Logger.Info("Browser", "Loaded avaliable integrations.", Color.White, Color.White);
-
-                MainPanel.singleton.RefreshIntegrationsBrowser();
-                await Task.Delay(30000);
+                await Task.Delay(50000);
             }
-
         }
     }
 }

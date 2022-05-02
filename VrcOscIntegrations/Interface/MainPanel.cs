@@ -178,5 +178,10 @@ namespace VrcOscIntegrations.Interface
         {
             RefreshIntegrationsBrowser();
         }
+
+        private void main_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            RefreshIntegrationsBrowser();
+        }
     }
 }

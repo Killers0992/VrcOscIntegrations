@@ -81,6 +81,7 @@ namespace VrcOscIntegrations.Interface
             this.main.TabIndex = 0;
             this.main.Theme = ReaLTaiizor.Enum.Poison.ThemeStyle.Dark;
             this.main.UseSelectable = true;
+            this.main.SelectedIndexChanged += new System.EventHandler(this.main_SelectedIndexChanged);
             // 
             // homeTab
             // 
@@ -126,9 +127,9 @@ namespace VrcOscIntegrations.Interface
             this.integrationsBrowserTab.HorizontalScrollbarBarColor = true;
             this.integrationsBrowserTab.HorizontalScrollbarHighlightOnWheel = false;
             this.integrationsBrowserTab.HorizontalScrollbarSize = 10;
-            this.integrationsBrowserTab.Location = new System.Drawing.Point(4, 35);
+            this.integrationsBrowserTab.Location = new System.Drawing.Point(4, 38);
             this.integrationsBrowserTab.Name = "integrationsBrowserTab";
-            this.integrationsBrowserTab.Size = new System.Drawing.Size(874, 358);
+            this.integrationsBrowserTab.Size = new System.Drawing.Size(874, 355);
             this.integrationsBrowserTab.Style = ReaLTaiizor.Enum.Poison.ColorStyle.Lime;
             this.integrationsBrowserTab.TabIndex = 4;
             this.integrationsBrowserTab.Text = "Integrations Browser";
