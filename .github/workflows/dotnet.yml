@@ -1,0 +1,30 @@
+name: .NET
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --configuration Release --no-restore
+    - name: Publish
+      run: |
+        dotnet publish -c Release -o ../../VrcOscIntegrations -r win-x64 --self-contained true /p:PublishSingleFile=true /p:EnableCompressionInSingleFile=true
+    - uses: actions/upload-artifact@v2
+      with:
+        name: VrcOscIntegrations
+        path: D:\a\VrcOscIntegrations\VrcOscIntegrations.exe
