@@ -1,5 +1,9 @@
+[![Github All Releases](https://img.shields.io/github/downloads/Killers0992/VrcOscIntegrations/total.svg)]()
 # VRC OSC Integrations
 Application which contains OSC integrations for vrchat in one place.
+
+[![Discord Banner](https://discordapp.com/api/guilds/948581245527425114/widget.png?style=banner3)](https://discord.gg/uhvsaEFmSE)
+
 
 # Installation
 
