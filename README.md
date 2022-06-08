@@ -13,6 +13,11 @@ Application which contains OSC integrations for vrchat in one place.
 4. Installed application should be in ``My Integrations`` tab.
 5. In box which contains your installed integration name click ``View`` to show user interface for this integration.
 
+# Avaliable integrations
+
+- Twitch Integration - Allows you to control avatar thru twitch ( chat commands, rewards, sub/follow events )
+- Source: https://github.com/Killers0992/TwitchIntegration
+
 # Configs
 
 Main config ``config.yml`` for application can be found in location where executable file is stored.
