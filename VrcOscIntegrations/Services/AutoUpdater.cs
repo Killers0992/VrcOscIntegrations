@@ -66,7 +66,7 @@ namespace VrcOscIntegrations.Services
                 return null;
             }
 
-            if (version.CompareTo(latestVersion) > 0)
+            if (version.CompareTo(latestVersion) < 0)
                 return ver;
             else
                 return null;
