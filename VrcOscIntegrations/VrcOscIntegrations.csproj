@@ -12,6 +12,10 @@
       <None Remove="config.yml" />
     </ItemGroup>
 
+    <ItemGroup>
+      <_WebToolingArtifacts Remove="Properties\PublishProfiles\Windows.pubxml" />
+    </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="CoreOSC" Version="1.0.0" />
     <PackageReference Include="Microsoft.Toolkit.Uwp.Notifications" Version="7.1.2" />

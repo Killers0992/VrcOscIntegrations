@@ -21,7 +21,10 @@ namespace VrcOscIntegrations.Interface
         public static MainPanel singleton;
 
         public static bool IsLoaded;
-        public static PanelVersion CurrentVersion;
+        public static PanelVersion CurrentVersion = new PanelVersion()
+        {
+            Version = "1.0.1"
+        };
 
         private PoisonTaskWindow _updatesWindow;
 

@@ -21,9 +21,6 @@ namespace VrcOscIntegrations.Services
             if (File.Exists("./old_VrcOscIntegrations.exe"))
                 File.Delete("./old_VrcOscIntegrations.exe");
 
-            if (MainPanel.CurrentVersion == null)
-                MainPanel.CurrentVersion = JsonConvert.DeserializeObject<PanelVersion>(Encoding.UTF8.GetString(Resources.version));
-
             while (true)
             {
                 var panelUpdate = await CheckUpdate("Panel", MainPanel.CurrentVersion.Version, _panelVersionUrl);
