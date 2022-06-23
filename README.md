@@ -1,5 +1,9 @@
+[![Github All Releases](https://img.shields.io/github/downloads/Killers0992/VrcOscIntegrations/total.svg)]()
 # VRC OSC Integrations
 Application which contains OSC integrations for vrchat in one place.
+
+[![Discord Banner](https://discordapp.com/api/guilds/948581245527425114/widget.png?style=banner3)](https://discord.gg/uhvsaEFmSE)
+
 
 # Installation
 
@@ -8,6 +12,11 @@ Application which contains OSC integrations for vrchat in one place.
 3. Goto tab ``Integrations Browser`` install integration which you want and then restart application.
 4. Installed application should be in ``My Integrations`` tab.
 5. In box which contains your installed integration name click ``View`` to show user interface for this integration.
+
+# Avaliable integrations
+
+- Twitch Integration - Allows you to control avatar thru twitch ( chat commands, rewards, sub/follow events )
+- Source: https://github.com/Killers0992/TwitchIntegration
 
 # Configs
 
