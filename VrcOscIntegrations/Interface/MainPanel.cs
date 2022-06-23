@@ -120,6 +120,8 @@ namespace VrcOscIntegrations.Interface
                 if (AutoUpdater.ReadyUpdate != null && !AutoUpdater.IsUpdating)
                 {
                     AutoUpdater.IsUpdating = true;
+                    progressBar.Visible = true;
+                    progressText.Visible = true;
                     fileDownloader.RunWorkerAsync();
                     return;
                 }
@@ -289,16 +291,13 @@ namespace VrcOscIntegrations.Interface
         private void fileDownloader_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
             int updatesCount = AutoUpdater.ReadyUpdate.Count;
-            string currentPath = Path.Combine(AppContext.BaseDirectory, $"VrcOscIntegrations.exe");
+            string currentPath = Path.Combine(AppContext.BaseDirectory, $"temp_VrcOscIntegrations.exe");
 
             for (int x = 0; x < updatesCount; x++)
             {
                 switch (AutoUpdater.ReadyUpdate[x].Type)
                 {
                     case UpdateType.Panel:
-                        string archivePath = Path.Combine(AppContext.BaseDirectory, $"old_VrcOscIntegrations.exe");
-                        File.Move(currentPath, archivePath);
-
                         DownloadFileWithProgress($"https://github.com/Killers0992/VrcOscIntegrations/releases/download/{AutoUpdater.ReadyUpdate[x].NewVersion}/VrcOscIntegrations.exe", AutoUpdater.ReadyUpdate[x].DisplayName, x, updatesCount, currentPath, progressBar, progressText);
                         break;
                 }
@@ -391,6 +390,14 @@ namespace VrcOscIntegrations.Interface
                 if (response != null) response.Close();
                 if (remoteStream != null) remoteStream.Close();
                 if (localStream != null) localStream.Close();
+
+                string currentPath = Path.Combine(AppContext.BaseDirectory, $"VrcOscIntegrations.exe");
+                string newPath = Path.Combine(AppContext.BaseDirectory, $"temp_VrcOscIntegrations.exe");
+
+                string archivePath = Path.Combine(AppContext.BaseDirectory, $"old_VrcOscIntegrations.exe");
+
+                File.Move(currentPath, archivePath, true);
+                File.Move(newPath, archivePath, true);
             }
         }
     }
