@@ -6,12 +6,23 @@ namespace VrcOscIntegrations.Services
 {
     public class OscActions : BackgroundService
     {
-        static UdpClient _client;
-        static IPEndPoint _endpoint;
+        static UdpClient _receiver;
+        static UdpClient _sender;
+        static IPEndPoint _senderEndpoint;
+        static IPEndPoint _receiverEndpoint;
 
         public static ConcurrentDictionary<string, Queue<OscOutAction>> ActionsQueue = new ConcurrentDictionary<string, Queue<OscOutAction>>();
 
         public ConcurrentDictionary<string, OscOutAction> CurrentlyRunningActions = new ConcurrentDictionary<string, OscOutAction>();
+
+        public static void SendAction(OscMessage message)
+        {
+            EnqueueAction(new OscOutAction()
+            {
+                ActionName = String.Empty,
+                RawMessage = message,
+            });
+        }
 
         public static void EnqueueAction(OscOutAction action)
         {
@@ -25,13 +36,13 @@ namespace VrcOscIntegrations.Services
         private async Task SendOcsData(string action, object obj)
         {
             if (obj is int _int)
-                await _client.SendMessageAsync(new OscMessage(new Address(action), new object[] { _int }));
+                await _sender.SendMessageAsync(new OscMessage(new Address(action), new object[] { _int }));
             else if (obj is long _long)
-                await _client.SendMessageAsync(new OscMessage(new Address(action), new object[] { (int)_long }));
+                await _sender.SendMessageAsync(new OscMessage(new Address(action), new object[] { (int)_long }));
             else if (obj is double _double)
-                await _client.SendMessageAsync(new OscMessage(new Address(action), new object[] { (float)_double }));
+                await _sender.SendMessageAsync(new OscMessage(new Address(action), new object[] { (float)_double }));
             else if (obj is bool _bool)
-                await _client.SendMessageAsync(new OscMessage(new Address(action), new object[] { _bool }));
+                await _sender.SendMessageAsync(new OscMessage(new Address(action), new object[] { _bool }));
         }
 
         public async Task TryExecuting()
@@ -44,9 +55,15 @@ namespace VrcOscIntegrations.Services
                     continue;
                 }
 
-                if (!CurrentlyRunningActions.ContainsKey(action.Key))
+                if (!CurrentlyRunningActions.ContainsKey(action.Key) || action.Key == String.Empty)
                 {
                     var newAction = action.Value.Dequeue();
+
+                    if (action.Key == String.Empty)
+                    {
+                        await _sender.SendMessageAsync(newAction.RawMessage);
+                        continue;
+                    }
 
                     if (newAction.Value != null)
                     {
@@ -77,11 +94,27 @@ namespace VrcOscIntegrations.Services
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            _client = new UdpClient();
-            _endpoint = new IPEndPoint(IPAddress.Parse(MainConfig.Instance.OscServer.IpAddress), MainConfig.Instance.OscServer.Port);
-            Logger.Info("OscClient", $"Connect udp client to IP: {MainConfig.Instance.OscServer.IpAddress}, Port: {MainConfig.Instance.OscServer.Port}.", Color.Yellow, Color.White);
-            _client.Connect(_endpoint);
+            _sender = new UdpClient();
+            _receiver = new UdpClient();
 
+            _senderEndpoint = new IPEndPoint(IPAddress.Parse(MainConfig.Instance.OscClient.IpAddress), MainConfig.Instance.OscClient.Port);
+            Logger.Info("OscSender", $"Connect to IP: {MainConfig.Instance.OscClient.IpAddress}, Port: {MainConfig.Instance.OscClient.Port}.", Color.Yellow, Color.White);
+            _sender.Connect(_senderEndpoint);
+
+            _receiverEndpoint = new IPEndPoint(IPAddress.Parse(MainConfig.Instance.OscServer.IpAddress), MainConfig.Instance.OscServer.Port);
+            Logger.Info("OscReceiver", $"Start listening on IP: {MainConfig.Instance.OscServer.IpAddress}, Port: 9001.", Color.Yellow, Color.White);
+            _receiver.Connect(_receiverEndpoint);
+
+            await Task.WhenAll(new Task[]
+            {
+                Runner1(),
+                Runner2()
+            });
+        }
+
+        private async Task Runner1()
+        {
+            Logger.Info("OscSender", "Start runner...", Color.Yellow, Color.White);
             while (true)
             {
                 try
@@ -90,9 +123,31 @@ namespace VrcOscIntegrations.Services
                 }
                 catch (Exception ex)
                 {
-                    Logger.Error("OsrClient", ex.Message, Color.Yellow, Color.White);
+                    Logger.Error("OscSender", ex.Message, Color.Yellow, Color.White);
                 }
-                await Task.Delay(50);
+                await Task.Delay(1);
+            }
+        }
+
+        private async Task Runner2()
+        {
+            Logger.Info("OscReceiver", "Start runner...", Color.Yellow, Color.White);
+            while (true)
+            {
+                try
+                {
+                    var message = await _receiver.ReceiveMessageAsync();
+                    foreach(var integration in IntegrationsManager.Integrations.Values)
+                    {
+                        Logger.Info("LOG", (message.Address + " " + message.Address.Value), Color.White, Color.White);
+                        integration.OnReceiveOscMessage(message.Address.Value, message);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error("OscReceiver", ex.Message, Color.Yellow, Color.White);
+                }
+                await Task.Delay(1);
             }
         }
     }

@@ -40,11 +40,11 @@
 
         private void interactionButton_Click(object sender, EventArgs e)
         {
-            if (this.Parent.Parent.Controls[0] is IntegrationHeader header)
+            if (this.ParentForm is MainPanel panel)
             {
-                header.IntegrationId = Id;
-                header.IntegrationName = this.IntegrationName;
-                header.Visible = true;
+                panel.integrationHeader.IntegrationId = Id;
+                panel.integrationHeader.IntegrationName = this.IntegrationName;
+                panel.integrationHeader.Visible = true;
             }
 
             foreach (Control control in this.Parent.Controls)

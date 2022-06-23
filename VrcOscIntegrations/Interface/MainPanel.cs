@@ -5,6 +5,8 @@ using System;
 using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
+using VrcOscIntegrations.Properties;
+using VrcOscIntegrations.Services;
 
 namespace VrcOscIntegrations.Interface
 {
@@ -19,6 +21,9 @@ namespace VrcOscIntegrations.Interface
         public static MainPanel singleton;
 
         public static bool IsLoaded;
+        public static PanelVersion CurrentVersion;
+
+        private PoisonTaskWindow _updatesWindow;
 
         public static void OnReceiveLog(ConsoleLogArgs e)
         {
@@ -32,15 +37,66 @@ namespace VrcOscIntegrations.Interface
         {
             singleton = this;
             InitializeComponent();
+
             LogReceived += new EventHandler<ConsoleLogArgs>(OnReceiveConsoleLog);
-            debugSwitch.Switched = MainConfig.Instance.Debug;
+            
             foreach(var e in PendingLogs.ToArray())
                 AddConsoleLog(e.Time, e.Type, e.TagColor, e.TagMessage, e.MessageColor, e.Message);
+            
             PendingLogs.Clear();
 
-            debugSwitch.SwitchedChanged += OnDebugChanged;
+            //
+            debugSwitch.Switched = MainConfig.Instance.Debug;
+            debugSwitch.SwitchedChanged += (o) =>
+            {
+                MainConfig.Instance.Debug = debugSwitch.Switched;
+                MainConfig.Save();
+            };
 
-            foreach(var item in IntegrationsManager.Integrations)
+            autoUpdater.Switched = MainConfig.Instance.AutoUpdater;
+            autoUpdater.SwitchedChanged += (o) =>
+            {
+                MainConfig.Instance.AutoUpdater = autoUpdater.Switched;
+                MainConfig.Save();
+            };
+
+            clientIp.Text = MainConfig.Instance.OscClient.IpAddress;
+            clientIp.TextChanged += (o, e) =>
+            {
+                MainConfig.Instance.OscClient.IpAddress = clientIp.Text;
+                MainConfig.Save();
+            };
+
+            clientPort.Value = MainConfig.Instance.OscClient.Port;
+            clientPort.ValueChanged += (o, e) =>
+            {
+                MainConfig.Instance.OscClient.Port = (int)clientPort.Value;
+                MainConfig.Save();
+            };
+
+            serverIp.Text = MainConfig.Instance.OscServer.IpAddress;
+            serverIp.TextChanged += (o, e) =>
+            {
+                MainConfig.Instance.OscServer.IpAddress = serverIp.Text;
+                MainConfig.Save();
+            };
+
+            serverPort.Value = MainConfig.Instance.OscServer.Port;
+            serverPort.ValueChanged += (o, e) =>
+            {
+                MainConfig.Instance.OscServer.Port = (int)serverPort.Value;
+                MainConfig.Save();
+            };
+
+            webServer.Text = MainConfig.Instance.WebServer.Url;
+            webServer.TextChanged += (o, e) =>
+            {
+                MainConfig.Instance.WebServer.Url = webServer.Text;
+                MainConfig.Save();
+            };
+
+            //
+            foreach (var item in IntegrationsManager.Integrations)
             {
                 var inter = new IntegrationItem()
                 {
@@ -53,7 +109,40 @@ namespace VrcOscIntegrations.Interface
             }
 
             integrationsBrowserSearch.Text = string.Empty;
+            versionLabel.Text = CurrentVersion.Version;
             RefreshIntegrationsBrowser();
+
+            checkPendingUpdates.Tick += (o, e) =>
+            {
+                if (AutoUpdater.ReadyUpdate != null && !AutoUpdater.IsUpdating)
+                {
+                    AutoUpdater.IsUpdating = true;
+                    fileDownloader.RunWorkerAsync();
+                    return;
+                }
+
+
+                if (AutoUpdater.PendingUpdates.Count == 0) return;
+
+                if (_updatesWindow != null) return;
+
+                _updatesWindow = new PoisonTaskWindow(0, new UpdateNotify(AutoUpdater.PendingUpdates.Values.ToList()))
+                {
+                    Text = "Found new updates...",
+                    Resizable = false,
+                    MinimizeBox = false,
+                    MaximizeBox = false,
+                    Movable = true,
+                    WindowState = FormWindowState.Normal,
+                };
+                _updatesWindow.Controls[0].Parent = _updatesWindow;
+
+                _updatesWindow.Theme = ReaLTaiizor.Enum.Poison.ThemeStyle.Dark;
+                _updatesWindow.Style = ReaLTaiizor.Enum.Poison.ColorStyle.Teal;
+                _updatesWindow.Show();
+                _updatesWindow.Size = new System.Drawing.Size(345, 460);
+                AutoUpdater.PendingUpdates.Clear();
+            };
         }
 
         public void RefreshIntegrationsBrowser()
@@ -109,12 +198,6 @@ namespace VrcOscIntegrations.Interface
                     else
                         control.Visible = false;
             }
-        }
-
-        void OnDebugChanged(object sender)
-        {
-            MainConfig.Instance.Debug = debugSwitch.Switched;
-            MainConfig.Save();
         }
 
         void OnReceiveConsoleLog(object sender, ConsoleLogArgs e)
@@ -182,6 +265,130 @@ namespace VrcOscIntegrations.Interface
         private void main_SelectedIndexChanged(object sender, EventArgs e)
         {
             RefreshIntegrationsBrowser();
+        }
+
+        private void settingsTab_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void poisonLabel9_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void fileDownloader_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
+        {
+            progressBar.Visible = false;
+            progressText.Visible = false;
+        }
+
+        private void fileDownloader_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
+        {
+            int updatesCount = AutoUpdater.ReadyUpdate.Count;
+            string currentPath = Path.Combine(AppContext.BaseDirectory, $"VrcOscIntegrations.exe");
+
+            for (int x = 0; x < updatesCount; x++)
+            {
+                switch (AutoUpdater.ReadyUpdate[x].Type)
+                {
+                    case UpdateType.Panel:
+                        string archivePath = Path.Combine(AppContext.BaseDirectory, $"old_VrcOscIntegrations.exe");
+                        File.Move(currentPath, archivePath);
+
+                        DownloadFileWithProgress($"https://github.com/Killers0992/VrcOscIntegrations/releases/download/{AutoUpdater.ReadyUpdate[x].NewVersion}/VrcOscIntegrations.exe", AutoUpdater.ReadyUpdate[x].DisplayName, x, updatesCount, currentPath, progressBar, progressText);
+                        break;
+                }
+            }
+
+            ProcessStartInfo startInfo = new ProcessStartInfo(currentPath);
+            Process.Start(startInfo);
+            Process.GetCurrentProcess().Kill();
+        }
+
+        void DownloadFileWithProgress(string url, string displayName, int current, int max, string path, PoisonProgressBar progress, PoisonLabel progressText)
+        {
+            int bytesProcess = 0;
+            Stream remoteStream = null;
+            Stream localStream = null;
+            WebResponse response = null;
+
+            try
+            {
+                WebRequest request = WebRequest.Create(url);
+                if (request != null)
+                {
+                    double TotalBytesToReceive = 0;
+                    var SizewebRequest = HttpWebRequest.Create(new Uri(url));
+                    SizewebRequest.Method = "HEAD";
+
+                    using(var webResponse = SizewebRequest.GetResponse())
+                    {
+                        var fileSize = webResponse.Headers.Get("Content-Length");
+                        TotalBytesToReceive = Convert.ToDouble(fileSize);
+                    }
+
+                    response = request.GetResponse();
+                    if (response != null)
+                    {
+                        remoteStream = response.GetResponseStream();
+
+                        localStream = File.Create(path);
+
+                        byte[] buffer = new byte[1024];
+                        int bytesRead = 0;
+
+                        do
+                        {
+                            bytesRead = remoteStream.Read(buffer, 0, buffer.Length);
+
+                            localStream.Write(buffer, 0, bytesRead);
+
+                            bytesProcess += bytesRead;
+
+                            double bytesIn = (double)bytesProcess;
+                            double percentage = bytesIn / TotalBytesToReceive * 100;
+                            percentage = Math.Round(percentage, 0);
+
+                            if (progress.InvokeRequired)
+                            {
+                                progress.Invoke(new Action(() =>
+                                {
+                                    progress.Value = (int)Math.Truncate(percentage);
+                                }));
+                            }
+                            else
+                            {
+                                progress.Value = (int)Math.Truncate(percentage);
+                            }
+
+
+                            if (progressText.InvokeRequired)
+                            {
+                                progressText.Invoke(new Action(() =>
+                                {
+                                    progressText.Text = $"Downloading update for {displayName}... ( {current}/{max} )";
+                                }));
+                            }
+                            else
+                            {
+                                progressText.Text = $"Downloading update for {displayName}... ( {current}/{max} )";
+                            }
+                        } while (bytesRead > 0);
+                    }
+
+                }
+            }
+            catch(Exception ex)
+            {
+
+            }
+            finally
+            {
+                if (response != null) response.Close();
+                if (remoteStream != null) remoteStream.Close();
+                if (localStream != null) localStream.Close();
+            }
         }
     }
 }

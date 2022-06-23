@@ -33,7 +33,9 @@ namespace VrcOscIntegrations
         public bool AutoUpdater { get; set; } = true;
 
         [YamlMember(Description = "Information needed for connecting with OSC running in VRC.")]
-        public OscServer OscServer { get; set; } = new OscServer();
+        public OscServer OscClient { get; set; } = new OscServer();
+        [YamlMember(Description = "Information needed for VRChat connecting to OSC server.")]
+        public OscServer OscServer { get; set; } = new OscServer() { Port = 9001 };
 
         [YamlMember(Description = "Web server running on localhost.")]
         public WebServer WebServer { get; set; } = new WebServer();

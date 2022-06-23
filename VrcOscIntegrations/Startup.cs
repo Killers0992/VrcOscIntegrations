@@ -14,6 +14,7 @@ namespace VrcOscIntegrations
         {
             services.AddHostedService<OscActions>();
             services.AddHostedService<IntegrationsFetch>();
+            services.AddHostedService<AutoUpdater>();
 
             IntegrationsManager.Manager.RegisterIntegrations(ref services);
 

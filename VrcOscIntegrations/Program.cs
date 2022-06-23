@@ -4,6 +4,7 @@ namespace VrcOscIntegrations
 {
     internal static class Program
     {
+        public static Version Version { get; } = new Version(1, 0, 1);
         static MainPanel _panel;
 
         [STAThread]

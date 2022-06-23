@@ -37,12 +37,15 @@ namespace VrcOscIntegrations.Interface.Entries
 
         private void moveBack_Click(object sender, EventArgs e)
         {
-            this.Visible = false;
+            Visible = false;
 
-            foreach(Control control in this.Parent.Controls[1].Controls)
-                control.Visible = true;
+            if (ParentForm is not MainPanel panel) return;
 
-            this.Parent.Controls[1].Controls.Remove(IntegrationsManager.Integrations[IntegrationId].MainPanel);
+            panel.myIntegrations.Controls.Remove(IntegrationsManager.Integrations[IntegrationId].MainPanel);
+            foreach(IntegrationItem inter in panel.myIntegrations.Controls)
+            {
+                inter.Visible = true;
+            }
         }
     }
 }
