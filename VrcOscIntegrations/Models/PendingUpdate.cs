@@ -8,6 +8,11 @@
         public string CurrentVersion { get; set; }
         public string NewVersion { get; set; }
         public string[] Changelogs { get; set; }
+
+        public string GithubRepo { get; set; }
+        public string DependenciesFileName { get; set; }
+        public string IntegrationFileName { get; set; }
+
         public UpdateState UpdateState { get; set; } = UpdateState.None;
     }
 }

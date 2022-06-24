@@ -18,11 +18,19 @@ namespace VrcOscIntegrations.Services
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            if (File.Exists("./old_VrcOscIntegrations.exe"))
-                File.Delete("./old_VrcOscIntegrations.exe");
+            foreach(var file in Directory.GetFiles("./").Where(x => x.StartsWith("old_")))
+            {
+                File.Delete(file);
+            }
 
             while (true)
             {
+                if (!MainConfig.Instance.AutoUpdater)
+                {
+                    await Task.Delay(5000);
+                    continue;
+                }
+
                 var panelUpdate = await CheckUpdate("Panel", MainPanel.CurrentVersion.Version, _panelVersionUrl);
 
                 if (panelUpdate != null && !PendingUpdates.ContainsKey("panel") && ReadyUpdate == null)
@@ -34,6 +42,35 @@ namespace VrcOscIntegrations.Services
                         Changelogs = panelUpdate.ChangeLogs,
                         CurrentVersion = MainPanel.CurrentVersion.Version,
                         NewVersion = panelUpdate.Version,
+                    });
+                }
+
+                foreach(var integration in IntegrationsManager.Integrations)
+                {
+                    if (PendingUpdates.ContainsKey(integration.Value.Id)) continue;
+
+                    var webIntegration = MainPanel.BrowserIntegrationItems.FirstOrDefault(x => x.Id == integration.Value.Id);
+                    if (webIntegration == null)
+                    {
+                        Logger.Warn("AutoUpdater", $"Integration with id \"{integration.Value.Id}\" is not added to integrations.json on VRC Osc Integrations repository.", Color.White, Color.White);
+                        continue;
+                    }
+
+                    var integrationResult = await CheckUpdate(integration.Value.Name, integration.Value.Version.ToString(), webIntegration.VersionFile);
+                    if (integrationResult == null) continue;
+
+
+                    PendingUpdates.Add(integration.Value.Id, new PendingUpdate()
+                    {
+                        Id = integration.Value.Id,
+                        GithubRepo = webIntegration.GithubRepo,
+                        IntegrationFileName = integrationResult.IntegrationFileName,
+                        DependenciesFileName = integrationResult.DependenciesFileName,
+                        Type = UpdateType.Integration,
+                        DisplayName = integration.Value.Name,
+                        Changelogs = integrationResult.ChangeLogs,
+                        CurrentVersion = integration.Value.Version.ToString(),
+                        NewVersion = integrationResult.Version,
                     });
                 }
 

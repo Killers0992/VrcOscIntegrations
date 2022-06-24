@@ -4,6 +4,7 @@ using ReaLTaiizor.Forms;
 using System;
 using System.Data;
 using System.Drawing;
+using System.IO.Compression;
 using System.Windows.Forms;
 using VrcOscIntegrations.Properties;
 using VrcOscIntegrations.Services;
@@ -23,7 +24,7 @@ namespace VrcOscIntegrations.Interface
         public static bool IsLoaded;
         public static PanelVersion CurrentVersion = new PanelVersion()
         {
-            Version = "1.0.1"
+            Version = "1.0.2"
         };
 
         private PoisonTaskWindow _updatesWindow;
@@ -291,14 +292,50 @@ namespace VrcOscIntegrations.Interface
         private void fileDownloader_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
             int updatesCount = AutoUpdater.ReadyUpdate.Count;
-            string currentPath = Path.Combine(AppContext.BaseDirectory, $"temp_VrcOscIntegrations.exe");
+            string currentPath = Path.Combine(AppContext.BaseDirectory, $"VrcOscIntegrations.exe");
 
             for (int x = 0; x < updatesCount; x++)
             {
+                string targetDirectory =
+                    AutoUpdater.ReadyUpdate[x].Type == UpdateType.Panel ?
+                    AppContext.BaseDirectory :
+                    Path.Combine(AppContext.BaseDirectory, "Integrations");
+                string tempPath =
+                    AutoUpdater.ReadyUpdate[x].Type == UpdateType.Panel ? 
+                    Path.Combine(targetDirectory, $"temp_VrcOscIntegrations.exe") :
+                    Path.Combine(targetDirectory, $"temp_{AutoUpdater.ReadyUpdate[x].IntegrationFileName}.dll");
+
                 switch (AutoUpdater.ReadyUpdate[x].Type)
                 {
                     case UpdateType.Panel:
-                        DownloadFileWithProgress($"https://github.com/Killers0992/VrcOscIntegrations/releases/download/{AutoUpdater.ReadyUpdate[x].NewVersion}/VrcOscIntegrations.exe", AutoUpdater.ReadyUpdate[x].DisplayName, x, updatesCount, currentPath, progressBar, progressText);
+                        DownloadFileWithProgress($"https://github.com/Killers0992/VrcOscIntegrations/releases/download/{AutoUpdater.ReadyUpdate[x].NewVersion}/VrcOscIntegrations.exe", AutoUpdater.ReadyUpdate[x].DisplayName, x + 1, updatesCount, tempPath, "VrcOscIntegrations.exe", progressBar, progressText);
+                        break;
+                    case UpdateType.Integration:
+                        DownloadFileWithProgress($"{AutoUpdater.ReadyUpdate[x].GithubRepo}/releases/download/{AutoUpdater.ReadyUpdate[x].NewVersion}/{AutoUpdater.ReadyUpdate[x].IntegrationFileName}.dll", AutoUpdater.ReadyUpdate[x].DisplayName, x + 1, updatesCount, tempPath, $"{AutoUpdater.ReadyUpdate[x].IntegrationFileName}.dll", progressBar, progressText);
+
+                        if (!string.IsNullOrEmpty(AutoUpdater.ReadyUpdate[x].DependenciesFileName))
+                        {
+                            var depFile = $"{AutoUpdater.ReadyUpdate[x].GithubRepo}/releases/download/{AutoUpdater.ReadyUpdate[x].NewVersion}/{AutoUpdater.ReadyUpdate[x].DependenciesFileName}.zip";
+                            var depTargetFile = Path.Combine(AppContext.BaseDirectory, "Dependencies", $"{AutoUpdater.ReadyUpdate[x].DependenciesFileName}.zip");
+
+                            DownloadFileWithProgress(depFile, AutoUpdater.ReadyUpdate[x].DisplayName + " deps", x + 1, updatesCount, depTargetFile, $"{AutoUpdater.ReadyUpdate[x].DependenciesFileName}.zip", progressBar, progressText, false);
+
+                            Logger.Info("AutoUpdater", $"Extract all dependencies for {AutoUpdater.ReadyUpdate[x].DisplayName} into dependencies folder...", Color.White, Color.White);
+
+                            using (ZipArchive archive = ZipFile.OpenRead(depTargetFile))
+                            {
+                                foreach (ZipArchiveEntry entry in archive.Entries.Where(p => p.Name.EndsWith(".dll")))
+                                {
+                                    var depTargetFile2 = Path.Combine(AppContext.BaseDirectory, "Dependencies", $"{entry.Name}.dll");
+
+                                    if (!File.Exists(depTargetFile2))
+                                        entry.ExtractToFile(depTargetFile2);
+                                }
+                            }
+                            Logger.Info("AutoUpdater", $"Extracted all dependencies for {AutoUpdater.ReadyUpdate[x].DisplayName} into dependencies folder!", Color.White, Color.White);
+
+                            File.Delete(depTargetFile);
+                        }
                         break;
                 }
             }
@@ -308,7 +345,7 @@ namespace VrcOscIntegrations.Interface
             Process.GetCurrentProcess().Kill();
         }
 
-        void DownloadFileWithProgress(string url, string displayName, int current, int max, string path, PoisonProgressBar progress, PoisonLabel progressText)
+        void DownloadFileWithProgress(string url, string displayName, int current, int max, string path, string fileName, PoisonProgressBar progress, PoisonLabel progressText, bool archive = true)
         {
             int bytesProcess = 0;
             Stream remoteStream = null;
@@ -391,13 +428,12 @@ namespace VrcOscIntegrations.Interface
                 if (remoteStream != null) remoteStream.Close();
                 if (localStream != null) localStream.Close();
 
-                string currentPath = Path.Combine(AppContext.BaseDirectory, $"VrcOscIntegrations.exe");
-                string newPath = Path.Combine(AppContext.BaseDirectory, $"temp_VrcOscIntegrations.exe");
+                string currentPath = Path.Combine(Path.GetDirectoryName(path), fileName);
 
-                string archivePath = Path.Combine(AppContext.BaseDirectory, $"old_VrcOscIntegrations.exe");
+                string archivePath = Path.Combine(Path.GetDirectoryName(path), $"old_{fileName}");
 
-                File.Move(currentPath, archivePath, true);
-                File.Move(newPath, archivePath, true);
+                if (archive) File.Move(currentPath, archivePath, true);
+                File.Move(path, currentPath, true);
             }
         }
     }
