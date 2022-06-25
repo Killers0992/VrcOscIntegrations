@@ -6,20 +6,45 @@ namespace VrcOscIntegrations
     {
         static MainPanel _panel;
 
+        public static string MainPath;
+        public static string TempPath;
+        public static string IntegrationsPath;
+        public static string DependenciesPath;
+        public static string ConfigPath;
+
         [STAThread]
         static void Main(string[] args)
         {
             var window = ConsoleWindow.GetConsoleWindow();
             ConsoleWindow.ShowWindow(window, 0);
 
+            MainPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "VrcOscIntegrations");
+            TempPath = Path.Combine(MainPath, "_temp");
+            IntegrationsPath = Path.Combine(MainPath, "Integrations");
+            DependenciesPath = Path.Combine(MainPath, "Dependencies");
+            ConfigPath =  Path.Combine(MainPath, "config.yml");
+
             if (File.Exists("./old_VrcOscIntegrations.exe"))
                 File.Delete("./old_VrcOscIntegrations.exe");
 
-            if (!Directory.Exists(Path.Combine(AppContext.BaseDirectory, "Integrations")))
-                Directory.CreateDirectory(Path.Combine(AppContext.BaseDirectory, "Integrations"));
+            if (!Directory.Exists(MainPath))
+                Directory.CreateDirectory(MainPath);
 
-            if (!Directory.Exists(Path.Combine(AppContext.BaseDirectory, "Dependencies")))
-                Directory.CreateDirectory(Path.Combine(AppContext.BaseDirectory, "Dependencies"));
+            if (!Directory.Exists(IntegrationsPath))
+                Directory.CreateDirectory(IntegrationsPath);
+
+            if (!Directory.Exists(DependenciesPath))
+                Directory.CreateDirectory(DependenciesPath);
+
+            if (!Directory.Exists(TempPath))
+                Directory.CreateDirectory(TempPath);
+            else
+            {
+                foreach (var file in Directory.GetFiles(TempPath))
+                {
+                    File.Delete(file);
+                }
+            }
 
             ApplicationConfiguration.Initialize();
 

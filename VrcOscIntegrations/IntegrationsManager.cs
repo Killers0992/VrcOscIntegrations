@@ -14,8 +14,6 @@
             }
         }
 
-        public string MainPath;
-
         public void RegisterIntegrations(ref IServiceCollection services)
         {
             var integrationsToEnable = Integrations
@@ -100,9 +98,8 @@
 
         public void LoadIntegrations()
         {
-            MainPath = AppContext.BaseDirectory;
-            LoadDependencies(Path.Combine(MainPath, "Dependencies"));
-            LoadIntegrationAssemblies(Path.Combine(MainPath, "Integrations"));
+            LoadDependencies(Program.DependenciesPath);
+            LoadIntegrationAssemblies(Program.IntegrationsPath);
         }
 
         public void LoadDependencies(string directory)
@@ -142,11 +139,6 @@
         public void LoadIntegrationAssemblies(string directory)
         {
             var dirInfo = new DirectoryInfo(directory);
-
-            foreach (var file in dirInfo.GetFiles("*.dll").Where(x => x.Name.StartsWith("old_")))
-            {
-                file.Delete();
-            }
 
             var totalIntegrations = dirInfo.GetFiles("*.dll");
             int loaded = 0;
@@ -203,7 +195,7 @@
                             continue;
                         }
 
-                        integration.IntegrationPath = Path.Combine(MainPath, "Integrations", integration.Name);
+                        integration.IntegrationPath = Path.Combine(Program.IntegrationsPath, integration.Name);
 
                         if (!Directory.Exists(integration.IntegrationPath))
                             Directory.CreateDirectory(integration.IntegrationPath);

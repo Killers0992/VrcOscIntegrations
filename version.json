@@ -1,6 +1,6 @@
 {
-  "Version": "1.0.3",
+  "Version": "1.0.4",
   "Changelogs": [
-    "- Fixed auto updater for integrations/panel."
+    "- Move main directory to documents."
   ]
 }

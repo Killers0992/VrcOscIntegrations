@@ -142,7 +142,7 @@ namespace VrcOscIntegrations.Interface.Entries
             if (!string.IsNullOrEmpty(versionObject.DependenciesFileName))
             {
                 var depFile = $"{browserItem.GithubRepo}/releases/download/{versionObject.Version}/{versionObject.DependenciesFileName}.zip";
-                var depTargetFile = Path.Combine(AppContext.BaseDirectory, "Dependencies", $"{versionObject.DependenciesFileName}.zip");
+                var depTargetFile = Path.Combine(Program.TempPath, $"{versionObject.DependenciesFileName}.zip");
                 
                 result = _client.GetAsync(depFile).Result;
                 if (!result.IsSuccessStatusCode)
@@ -160,7 +160,7 @@ namespace VrcOscIntegrations.Interface.Entries
                 {
                     foreach (ZipArchiveEntry entry in archive.Entries.Where(p => p.Name.EndsWith(".dll")))
                     {
-                        var depTargetFile2 = Path.Combine(AppContext.BaseDirectory, "Dependencies", $"{entry.Name}.dll");
+                        var depTargetFile2 = Path.Combine(Program.DependenciesPath, $"{entry.Name}.dll");
 
                         if (!File.Exists(depTargetFile2))
                             entry.ExtractToFile(depTargetFile2);
@@ -172,7 +172,7 @@ namespace VrcOscIntegrations.Interface.Entries
             }
 
             var mainFile = $"{browserItem.GithubRepo}/releases/download/{versionObject.Version}/{versionObject.IntegrationFileName}.dll";
-            var mainFileTarget = Path.Combine(AppContext.BaseDirectory, "Integrations", $"{versionObject.IntegrationFileName}.dll");
+            var mainFileTarget = Path.Combine(Program.IntegrationsPath, $"{versionObject.IntegrationFileName}.dll");
 
             result = _client.GetAsync(mainFile).Result;
             if (!result.IsSuccessStatusCode)

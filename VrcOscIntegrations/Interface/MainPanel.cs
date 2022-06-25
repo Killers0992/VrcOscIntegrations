@@ -24,7 +24,7 @@ namespace VrcOscIntegrations.Interface
         public static bool IsLoaded;
         public static PanelVersion CurrentVersion = new PanelVersion()
         {
-            Version = "1.0.3"
+            Version = "1.0.4"
         };
 
         private PoisonTaskWindow _updatesWindow;
@@ -300,14 +300,10 @@ namespace VrcOscIntegrations.Interface
 
             for (int x = 0; x < updatesCount; x++)
             {
-                string targetDirectory =
-                    AutoUpdater.ReadyUpdate[x].Type == UpdateType.Panel ?
-                    AppContext.BaseDirectory :
-                    Path.Combine(AppContext.BaseDirectory, "Integrations");
                 string tempPath =
                     AutoUpdater.ReadyUpdate[x].Type == UpdateType.Panel ? 
-                    Path.Combine(targetDirectory, $"temp_VrcOscIntegrations.exe") :
-                    Path.Combine(targetDirectory, $"temp_{AutoUpdater.ReadyUpdate[x].IntegrationFileName}.dll");
+                    Path.Combine(Program.TempPath, $"temp_VrcOscIntegrations.exe") :
+                    Path.Combine(Program.TempPath, $"temp_{AutoUpdater.ReadyUpdate[x].IntegrationFileName}.dll");
 
                 switch (AutoUpdater.ReadyUpdate[x].Type)
                 {
@@ -320,7 +316,7 @@ namespace VrcOscIntegrations.Interface
                         if (!string.IsNullOrEmpty(AutoUpdater.ReadyUpdate[x].DependenciesFileName))
                         {
                             var depFile = $"{AutoUpdater.ReadyUpdate[x].GithubRepo}/releases/download/{AutoUpdater.ReadyUpdate[x].NewVersion}/{AutoUpdater.ReadyUpdate[x].DependenciesFileName}.zip";
-                            var depTargetFile = Path.Combine(AppContext.BaseDirectory, "Dependencies", $"{AutoUpdater.ReadyUpdate[x].DependenciesFileName}.zip");
+                            var depTargetFile = Path.Combine(Program.TempPath, $"{AutoUpdater.ReadyUpdate[x].DependenciesFileName}.zip");
 
                             DownloadFileWithProgress(depFile, AutoUpdater.ReadyUpdate[x].DisplayName + " deps", x + 1, updatesCount, depTargetFile, $"{AutoUpdater.ReadyUpdate[x].DependenciesFileName}.zip", progressBar, progressText, false);
 
@@ -330,15 +326,13 @@ namespace VrcOscIntegrations.Interface
                             {
                                 foreach (ZipArchiveEntry entry in archive.Entries.Where(p => p.Name.EndsWith(".dll")))
                                 {
-                                    var depTargetFile2 = Path.Combine(AppContext.BaseDirectory, "Dependencies", $"{entry.Name}.dll");
+                                    var depTargetFile2 = Path.Combine(Program.DependenciesPath, $"{entry.Name}.dll");
 
                                     if (!File.Exists(depTargetFile2))
                                         entry.ExtractToFile(depTargetFile2);
                                 }
                             }
                             Logger.Info("AutoUpdater", $"Extracted all dependencies for {AutoUpdater.ReadyUpdate[x].DisplayName} into dependencies folder!", Color.White, Color.White);
-
-                            File.Delete(depTargetFile);
                         }
                         break;
                 }
@@ -430,7 +424,7 @@ namespace VrcOscIntegrations.Interface
 
                 string currentPath = Path.Combine(Path.GetDirectoryName(path), fileName);
 
-                string archivePath = Path.Combine(Path.GetDirectoryName(path), $"old_{fileName}");
+                string archivePath = Path.Combine(Program.TempPath, $"old_{fileName}");
 
                 if (archive && File.Exists(currentPath)) File.Move(currentPath, archivePath, true);
                 File.Move(path, currentPath, true);
