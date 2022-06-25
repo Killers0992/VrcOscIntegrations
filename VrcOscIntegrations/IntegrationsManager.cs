@@ -141,7 +141,14 @@
 
         public void LoadIntegrationAssemblies(string directory)
         {
-            var totalIntegrations = new DirectoryInfo(directory).GetFiles("*.dll");
+            var dirInfo = new DirectoryInfo(directory);
+
+            foreach (var file in dirInfo.GetFiles("*.dll").Where(x => x.Name.StartsWith("old_")))
+            {
+                file.Delete();
+            }
+
+            var totalIntegrations = dirInfo.GetFiles("*.dll");
             int loaded = 0;
 
             Logger.Info("Loader", $"Loading {totalIntegrations.Length} integrations...", Color.Crimson, Color.White);

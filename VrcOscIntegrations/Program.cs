@@ -12,6 +12,9 @@ namespace VrcOscIntegrations
             var window = ConsoleWindow.GetConsoleWindow();
             ConsoleWindow.ShowWindow(window, 0);
 
+            if (File.Exists("./old_VrcOscIntegrations.exe"))
+                File.Delete("./old_VrcOscIntegrations.exe");
+
             if (!Directory.Exists(Path.Combine(AppContext.BaseDirectory, "Integrations")))
                 Directory.CreateDirectory(Path.Combine(AppContext.BaseDirectory, "Integrations"));
 

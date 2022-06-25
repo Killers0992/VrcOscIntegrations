@@ -214,9 +214,9 @@ namespace VrcOscIntegrations.Interface
             this.myIntegrationsTab.HorizontalScrollbarBarColor = true;
             this.myIntegrationsTab.HorizontalScrollbarHighlightOnWheel = false;
             this.myIntegrationsTab.HorizontalScrollbarSize = 10;
-            this.myIntegrationsTab.Location = new System.Drawing.Point(4, 35);
+            this.myIntegrationsTab.Location = new System.Drawing.Point(4, 38);
             this.myIntegrationsTab.Name = "myIntegrationsTab";
-            this.myIntegrationsTab.Size = new System.Drawing.Size(874, 358);
+            this.myIntegrationsTab.Size = new System.Drawing.Size(874, 355);
             this.myIntegrationsTab.Style = ReaLTaiizor.Enum.Poison.ColorStyle.Teal;
             this.myIntegrationsTab.TabIndex = 5;
             this.myIntegrationsTab.Text = "My Integrations";
@@ -238,7 +238,7 @@ namespace VrcOscIntegrations.Interface
             this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 11.48913F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 88.51087F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(874, 358);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(874, 355);
             this.tableLayoutPanel1.TabIndex = 2;
             // 
             // myIntegrations
@@ -248,9 +248,9 @@ namespace VrcOscIntegrations.Interface
             | System.Windows.Forms.AnchorStyles.Right)));
             this.myIntegrations.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.myIntegrations.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.myIntegrations.Location = new System.Drawing.Point(3, 44);
+            this.myIntegrations.Location = new System.Drawing.Point(3, 43);
             this.myIntegrations.Name = "myIntegrations";
-            this.myIntegrations.Size = new System.Drawing.Size(868, 311);
+            this.myIntegrations.Size = new System.Drawing.Size(868, 309);
             this.myIntegrations.TabIndex = 1;
             // 
             // integrationHeader
@@ -260,7 +260,7 @@ namespace VrcOscIntegrations.Interface
             this.integrationHeader.IntegrationName = null;
             this.integrationHeader.Location = new System.Drawing.Point(3, 3);
             this.integrationHeader.Name = "integrationHeader";
-            this.integrationHeader.Size = new System.Drawing.Size(868, 34);
+            this.integrationHeader.Size = new System.Drawing.Size(865, 34);
             this.integrationHeader.Style = ReaLTaiizor.Enum.Poison.ColorStyle.Teal;
             this.integrationHeader.TabIndex = 2;
             this.integrationHeader.Theme = ReaLTaiizor.Enum.Poison.ThemeStyle.Dark;
@@ -722,7 +722,6 @@ namespace VrcOscIntegrations.Interface
         private PoisonTextBox integrationsBrowserSearch;
         private TableLayoutPanel tableLayoutPanel1;
         private BigLabel bigLabel1;
-        public IntegrationHeader integrationHeader;
         public FlowLayoutPanel myIntegrations;
         private PoisonLabel versionLabel;
         private PoisonLabel poisonLabel1;
@@ -744,5 +743,6 @@ namespace VrcOscIntegrations.Interface
         private PoisonLabel progressText;
         private PoisonProgressBar progressBar;
         private System.ComponentModel.BackgroundWorker fileDownloader;
+        public IntegrationHeader integrationHeader;
     }
 }

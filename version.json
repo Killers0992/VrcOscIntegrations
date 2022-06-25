@@ -1,6 +1,6 @@
 {
-  "Version": "1.0.2",
+  "Version": "1.0.3",
   "Changelogs": [
-    "- Added auto updater for integrations."
+    "- Fixed auto updater for integrations/panel."
   ]
 }

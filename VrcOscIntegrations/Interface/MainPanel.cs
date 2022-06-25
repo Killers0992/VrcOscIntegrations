@@ -24,7 +24,7 @@ namespace VrcOscIntegrations.Interface
         public static bool IsLoaded;
         public static PanelVersion CurrentVersion = new PanelVersion()
         {
-            Version = "1.0.2"
+            Version = "1.0.3"
         };
 
         private PoisonTaskWindow _updatesWindow;
@@ -287,12 +287,16 @@ namespace VrcOscIntegrations.Interface
         {
             progressBar.Visible = false;
             progressText.Visible = false;
+
+            string currentPath = Path.Combine(AppContext.BaseDirectory, $"VrcOscIntegrations.exe");
+            ProcessStartInfo startInfo = new ProcessStartInfo(currentPath);
+            Process.Start(startInfo);
+            Process.GetCurrentProcess().Kill();
         }
 
         private void fileDownloader_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
             int updatesCount = AutoUpdater.ReadyUpdate.Count;
-            string currentPath = Path.Combine(AppContext.BaseDirectory, $"VrcOscIntegrations.exe");
 
             for (int x = 0; x < updatesCount; x++)
             {
@@ -339,10 +343,6 @@ namespace VrcOscIntegrations.Interface
                         break;
                 }
             }
-
-            ProcessStartInfo startInfo = new ProcessStartInfo(currentPath);
-            Process.Start(startInfo);
-            Process.GetCurrentProcess().Kill();
         }
 
         void DownloadFileWithProgress(string url, string displayName, int current, int max, string path, string fileName, PoisonProgressBar progress, PoisonLabel progressText, bool archive = true)
@@ -432,7 +432,7 @@ namespace VrcOscIntegrations.Interface
 
                 string archivePath = Path.Combine(Path.GetDirectoryName(path), $"old_{fileName}");
 
-                if (archive) File.Move(currentPath, archivePath, true);
+                if (archive && File.Exists(currentPath)) File.Move(currentPath, archivePath, true);
                 File.Move(path, currentPath, true);
             }
         }

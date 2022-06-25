@@ -18,11 +18,6 @@ namespace VrcOscIntegrations.Services
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            foreach(var file in Directory.GetFiles("./").Where(x => x.StartsWith("old_")))
-            {
-                File.Delete(file);
-            }
-
             while (true)
             {
                 if (!MainConfig.Instance.AutoUpdater)
