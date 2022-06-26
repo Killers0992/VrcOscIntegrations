@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System.IO.Compression;
+using VrcOscIntegrations.Services;
 
 namespace VrcOscIntegrations.Interface.Entries
 {
@@ -121,6 +122,7 @@ namespace VrcOscIntegrations.Interface.Entries
         {
             var browserItem = MainPanel.BrowserIntegrationItems.FirstOrDefault(p => p.Id == Id);
 
+
             if (browserItem == null) return;
 
             var result = _client.GetAsync(browserItem.VersionFile).Result;
@@ -139,52 +141,20 @@ namespace VrcOscIntegrations.Interface.Entries
                 return;
             }
 
-            if (!string.IsNullOrEmpty(versionObject.DependenciesFileName))
+            AutoUpdater.ReadyUpdate = new List<PendingUpdate>()
             {
-                var depFile = $"{browserItem.GithubRepo}/releases/download/{versionObject.Version}/{versionObject.DependenciesFileName}.zip";
-                var depTargetFile = Path.Combine(Program.TempPath, $"{versionObject.DependenciesFileName}.zip");
-                
-                result = _client.GetAsync(depFile).Result;
-                if (!result.IsSuccessStatusCode)
+                new PendingUpdate()
                 {
-                    Logger.Error("Browser", $"Failed downloading dependencies for {IntegrationName}! ( network failure )", Color.White, Color.White);
-                    return;
+                    Id = Id,
+                    NewVersion = versionObject.Version,
+                    DisplayName = IntegrationName,
+                    GithubRepo = browserItem.GithubRepo,
+                    IntegrationFileName = versionObject.IntegrationFileName,
+                    DependenciesFileName = versionObject.DependenciesFileName,
+                    IsUpdate = false,
+                    Type = UpdateType.Integration,
                 }
-
-                var bytes = result.Content.ReadAsByteArrayAsync().Result;
-                File.WriteAllBytes(depTargetFile, bytes);
-
-                Logger.Info("Browser", $"Extract all dependencies for {IntegrationName} into dependencies folder...", Color.White, Color.White);
-
-                using (ZipArchive archive = ZipFile.OpenRead(depTargetFile))
-                {
-                    foreach (ZipArchiveEntry entry in archive.Entries.Where(p => p.Name.EndsWith(".dll")))
-                    {
-                        var depTargetFile2 = Path.Combine(Program.DependenciesPath, $"{entry.Name}.dll");
-
-                        if (!File.Exists(depTargetFile2))
-                            entry.ExtractToFile(depTargetFile2);
-                    }
-                }
-                Logger.Info("Browser", $"Extracted all dependencies for {IntegrationName} into dependencies folder!", Color.White, Color.White);
-
-                File.Delete(depTargetFile);
-            }
-
-            var mainFile = $"{browserItem.GithubRepo}/releases/download/{versionObject.Version}/{versionObject.IntegrationFileName}.dll";
-            var mainFileTarget = Path.Combine(Program.IntegrationsPath, $"{versionObject.IntegrationFileName}.dll");
-
-            result = _client.GetAsync(mainFile).Result;
-            if (!result.IsSuccessStatusCode)
-            {
-                Logger.Error("Browser", $"Failed downloading main assembly for {IntegrationName}! ( network failure )", Color.White, Color.White);
-                return;
-            }
-
-            var bytes2 = result.Content.ReadAsByteArrayAsync().Result;
-            File.WriteAllBytes(mainFileTarget, bytes2);
-            Logger.Info("Browser", $"Saved main assembly for integration {IntegrationName} into integrations folder!", Color.White, Color.White);
-            MessageBox.Show($"Installed integration {IntegrationName}, restart application to load new installed integration!");
+            };
         }
     }
 }

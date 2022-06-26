@@ -3,6 +3,7 @@
     public class PendingUpdate
     {
         public string Id { get; set; }
+        public bool IsUpdate { get; set; } = true;
         public UpdateType Type { get; set; }
         public string DisplayName { get; set; }
         public string CurrentVersion { get; set; }

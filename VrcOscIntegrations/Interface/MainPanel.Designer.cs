@@ -214,9 +214,9 @@ namespace VrcOscIntegrations.Interface
             this.myIntegrationsTab.HorizontalScrollbarBarColor = true;
             this.myIntegrationsTab.HorizontalScrollbarHighlightOnWheel = false;
             this.myIntegrationsTab.HorizontalScrollbarSize = 10;
-            this.myIntegrationsTab.Location = new System.Drawing.Point(4, 38);
+            this.myIntegrationsTab.Location = new System.Drawing.Point(4, 35);
             this.myIntegrationsTab.Name = "myIntegrationsTab";
-            this.myIntegrationsTab.Size = new System.Drawing.Size(874, 355);
+            this.myIntegrationsTab.Size = new System.Drawing.Size(874, 358);
             this.myIntegrationsTab.Style = ReaLTaiizor.Enum.Poison.ColorStyle.Teal;
             this.myIntegrationsTab.TabIndex = 5;
             this.myIntegrationsTab.Text = "My Integrations";
@@ -238,7 +238,7 @@ namespace VrcOscIntegrations.Interface
             this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 11.48913F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 88.51087F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(874, 355);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(874, 358);
             this.tableLayoutPanel1.TabIndex = 2;
             // 
             // myIntegrations
@@ -248,9 +248,9 @@ namespace VrcOscIntegrations.Interface
             | System.Windows.Forms.AnchorStyles.Right)));
             this.myIntegrations.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.myIntegrations.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.myIntegrations.Location = new System.Drawing.Point(3, 43);
+            this.myIntegrations.Location = new System.Drawing.Point(3, 44);
             this.myIntegrations.Name = "myIntegrations";
-            this.myIntegrations.Size = new System.Drawing.Size(868, 309);
+            this.myIntegrations.Size = new System.Drawing.Size(868, 311);
             this.myIntegrations.TabIndex = 1;
             // 
             // integrationHeader

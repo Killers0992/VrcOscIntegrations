@@ -24,7 +24,7 @@ namespace VrcOscIntegrations.Interface
         public static bool IsLoaded;
         public static PanelVersion CurrentVersion = new PanelVersion()
         {
-            Version = "1.0.4"
+            Version = "1.0.5"
         };
 
         private PoisonTaskWindow _updatesWindow;
@@ -288,8 +288,7 @@ namespace VrcOscIntegrations.Interface
             progressBar.Visible = false;
             progressText.Visible = false;
 
-            string currentPath = Path.Combine(AppContext.BaseDirectory, $"VrcOscIntegrations.exe");
-            ProcessStartInfo startInfo = new ProcessStartInfo(currentPath);
+            ProcessStartInfo startInfo = new ProcessStartInfo(Path.Combine(AppContext.BaseDirectory, $"VrcOscIntegrations.exe"));
             Process.Start(startInfo);
             Process.GetCurrentProcess().Kill();
         }
@@ -300,25 +299,25 @@ namespace VrcOscIntegrations.Interface
 
             for (int x = 0; x < updatesCount; x++)
             {
-                string tempPath =
-                    AutoUpdater.ReadyUpdate[x].Type == UpdateType.Panel ? 
-                    Path.Combine(Program.TempPath, $"temp_VrcOscIntegrations.exe") :
-                    Path.Combine(Program.TempPath, $"temp_{AutoUpdater.ReadyUpdate[x].IntegrationFileName}.dll");
+                string targetPath =
+                    AutoUpdater.ReadyUpdate[x].Type == UpdateType.Panel ?
+                    Path.Combine(AppContext.BaseDirectory, $"VrcOscIntegrations.exe") :
+                    Path.Combine(Program.IntegrationsPath, $"{AutoUpdater.ReadyUpdate[x].IntegrationFileName}.dll");
 
                 switch (AutoUpdater.ReadyUpdate[x].Type)
                 {
                     case UpdateType.Panel:
-                        DownloadFileWithProgress($"https://github.com/Killers0992/VrcOscIntegrations/releases/download/{AutoUpdater.ReadyUpdate[x].NewVersion}/VrcOscIntegrations.exe", AutoUpdater.ReadyUpdate[x].DisplayName, x + 1, updatesCount, tempPath, "VrcOscIntegrations.exe", progressBar, progressText);
+                        DownloadFileWithProgress($"https://github.com/Killers0992/VrcOscIntegrations/releases/download/{AutoUpdater.ReadyUpdate[x].NewVersion}/VrcOscIntegrations.exe", AutoUpdater.ReadyUpdate[x].IsUpdate, AutoUpdater.ReadyUpdate[x].DisplayName, x + 1, updatesCount, targetPath, "VrcOscIntegrations.exe", progressBar, progressText);
                         break;
                     case UpdateType.Integration:
-                        DownloadFileWithProgress($"{AutoUpdater.ReadyUpdate[x].GithubRepo}/releases/download/{AutoUpdater.ReadyUpdate[x].NewVersion}/{AutoUpdater.ReadyUpdate[x].IntegrationFileName}.dll", AutoUpdater.ReadyUpdate[x].DisplayName, x + 1, updatesCount, tempPath, $"{AutoUpdater.ReadyUpdate[x].IntegrationFileName}.dll", progressBar, progressText);
+                        DownloadFileWithProgress($"{AutoUpdater.ReadyUpdate[x].GithubRepo}/releases/download/{AutoUpdater.ReadyUpdate[x].NewVersion}/{AutoUpdater.ReadyUpdate[x].IntegrationFileName}.dll", AutoUpdater.ReadyUpdate[x].IsUpdate, AutoUpdater.ReadyUpdate[x].DisplayName, x + 1, updatesCount, targetPath, $"{AutoUpdater.ReadyUpdate[x].IntegrationFileName}.dll", progressBar, progressText);
 
                         if (!string.IsNullOrEmpty(AutoUpdater.ReadyUpdate[x].DependenciesFileName))
                         {
                             var depFile = $"{AutoUpdater.ReadyUpdate[x].GithubRepo}/releases/download/{AutoUpdater.ReadyUpdate[x].NewVersion}/{AutoUpdater.ReadyUpdate[x].DependenciesFileName}.zip";
                             var depTargetFile = Path.Combine(Program.TempPath, $"{AutoUpdater.ReadyUpdate[x].DependenciesFileName}.zip");
 
-                            DownloadFileWithProgress(depFile, AutoUpdater.ReadyUpdate[x].DisplayName + " deps", x + 1, updatesCount, depTargetFile, $"{AutoUpdater.ReadyUpdate[x].DependenciesFileName}.zip", progressBar, progressText, false);
+                            DownloadFileWithProgress(depFile, AutoUpdater.ReadyUpdate[x].IsUpdate, AutoUpdater.ReadyUpdate[x].DisplayName + " deps", x + 1, updatesCount, depTargetFile, $"{AutoUpdater.ReadyUpdate[x].DependenciesFileName}.zip", progressBar, progressText, false);
 
                             Logger.Info("AutoUpdater", $"Extract all dependencies for {AutoUpdater.ReadyUpdate[x].DisplayName} into dependencies folder...", Color.White, Color.White);
 
@@ -339,12 +338,13 @@ namespace VrcOscIntegrations.Interface
             }
         }
 
-        void DownloadFileWithProgress(string url, string displayName, int current, int max, string path, string fileName, PoisonProgressBar progress, PoisonLabel progressText, bool archive = true)
+        void DownloadFileWithProgress(string url, bool isUpdate, string displayName, int current, int max, string path, string fileName, PoisonProgressBar progress, PoisonLabel progressText, bool archive = true)
         {
             int bytesProcess = 0;
             Stream remoteStream = null;
             Stream localStream = null;
             WebResponse response = null;
+            string tempPath = Path.Combine(Program.TempPath, fileName);
 
             try
             {
@@ -366,7 +366,7 @@ namespace VrcOscIntegrations.Interface
                     {
                         remoteStream = response.GetResponseStream();
 
-                        localStream = File.Create(path);
+                        localStream = File.Create(tempPath);
 
                         byte[] buffer = new byte[1024];
                         int bytesRead = 0;
@@ -400,12 +400,12 @@ namespace VrcOscIntegrations.Interface
                             {
                                 progressText.Invoke(new Action(() =>
                                 {
-                                    progressText.Text = $"Downloading update for {displayName}... ( {current}/{max} )";
+                                    progressText.Text = $"Downloading {(isUpdate ? "update for" : string.Empty)} {displayName}... ( {current}/{max} )";
                                 }));
                             }
                             else
                             {
-                                progressText.Text = $"Downloading update for {displayName}... ( {current}/{max} )";
+                                progressText.Text = $"Downloading {(isUpdate ? "update for" : string.Empty)}... ( {current}/{max} )";
                             }
                         } while (bytesRead > 0);
                     }
@@ -422,12 +422,9 @@ namespace VrcOscIntegrations.Interface
                 if (remoteStream != null) remoteStream.Close();
                 if (localStream != null) localStream.Close();
 
-                string currentPath = Path.Combine(Path.GetDirectoryName(path), fileName);
-
                 string archivePath = Path.Combine(Program.TempPath, $"old_{fileName}");
-
-                if (archive && File.Exists(currentPath)) File.Move(currentPath, archivePath, true);
-                File.Move(path, currentPath, true);
+                if (archive && File.Exists(path)) File.Move(path, archivePath, true);
+                File.Move(tempPath, path, true);
             }
         }
     }
