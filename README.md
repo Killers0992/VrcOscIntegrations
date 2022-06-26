@@ -41,3 +41,6 @@ Used dependencies:
 Also if you want to use references from VRC OSC Integrations download required reference ``VrcOScIntegrations.dll`` from https://github.com/Killers0992/VrcOscIntegrations/releases/latest
 
 Template project can be found there: https://github.com/Killers0992/TemplateIntegration
+
+If your project is compiled you can take your dll and put in ``MyDocuments/VrcOscIntegrations/Integrations`` and then
+restart application itself if you want to load your integration.
