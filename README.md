@@ -38,4 +38,6 @@ Used dependencies:
 
 ``CoreOSC`` v1.0.0
 
+Also if you want to use references from VRC OSC Integrations download required reference ``VrcOScIntegrations.dll`` from https://github.com/Killers0992/VrcOscIntegrations/releases/latest
+
 Template project can be found there: https://github.com/Killers0992/TemplateIntegration
