@@ -24,7 +24,7 @@ namespace VrcOscIntegrations.Interface
         public static bool IsLoaded;
         public static PanelVersion CurrentVersion = new PanelVersion()
         {
-            Version = "1.0.5"
+            Version = "1.0.6"
         };
 
         private PoisonTaskWindow _updatesWindow;

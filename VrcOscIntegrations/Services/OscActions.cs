@@ -95,7 +95,6 @@ namespace VrcOscIntegrations.Services
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             _sender = new UdpClient();
-            _receiver = new UdpClient();
 
             _senderEndpoint = new IPEndPoint(IPAddress.Parse(MainConfig.Instance.OscClient.IpAddress), MainConfig.Instance.OscClient.Port);
             Logger.Info("OscSender", $"Connect to IP: {MainConfig.Instance.OscClient.IpAddress}, Port: {MainConfig.Instance.OscClient.Port}.", Color.Yellow, Color.White);
@@ -103,7 +102,7 @@ namespace VrcOscIntegrations.Services
 
             _receiverEndpoint = new IPEndPoint(IPAddress.Parse(MainConfig.Instance.OscServer.IpAddress), MainConfig.Instance.OscServer.Port);
             Logger.Info("OscReceiver", $"Start listening on IP: {MainConfig.Instance.OscServer.IpAddress}, Port: 9001.", Color.Yellow, Color.White);
-            _receiver.Connect(_receiverEndpoint);
+            _receiver = new UdpClient(_receiverEndpoint);
 
             await Task.WhenAll(new Task[]
             {
@@ -125,6 +124,7 @@ namespace VrcOscIntegrations.Services
                 {
                     Logger.Error("OscSender", ex.Message, Color.Yellow, Color.White);
                 }
+
                 await Task.Delay(1);
             }
         }
@@ -137,9 +137,8 @@ namespace VrcOscIntegrations.Services
                 try
                 {
                     var message = await _receiver.ReceiveMessageAsync();
-                    foreach(var integration in IntegrationsManager.Integrations.Values)
+                    foreach (var integration in IntegrationsManager.Integrations.Values)
                     {
-                        Logger.Info("LOG", (message.Address + " " + message.Address.Value), Color.White, Color.White);
                         integration.OnReceiveOscMessage(message.Address.Value, message);
                     }
                 }

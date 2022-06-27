@@ -1,7 +1,6 @@
 {
-  "Version": "1.0.5",
+  "Version": "1.0.6",
   "Changelogs": [
-    "- Fix again auto updater for integrations.",
-    "- Use new installer for integrations in browser."
+    "- Fix incoming OSC actions not being handled properly."
   ]
 }
