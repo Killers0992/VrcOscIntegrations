@@ -8,10 +8,9 @@ Application which contains OSC integrations for vrchat in one place.
 # Installation
 
 1. Download ``VrcOscIntegrations.exe`` from https://github.com/Killers0992/VrcOscIntegrations/releases/latest
-2. Move ``VrcOscIntegrations.exe`` to some fome folder and then launch.
-3. Goto tab ``Integrations Browser`` install integration which you want and then restart application.
-4. Installed application should be in ``My Integrations`` tab.
-5. In box which contains your installed integration name click ``View`` to show user interface for this integration.
+2. Goto tab ``Integrations Browser`` install integration which you want and then restart application.
+3. Installed application should be in ``My Integrations`` tab.
+4. In box which contains your installed integration name click ``View`` to show user interface for this integration.
 
 # Avaliable integrations
 
@@ -39,4 +38,9 @@ Used dependencies:
 
 ``CoreOSC`` v1.0.0
 
+Also if you want to use references from VRC OSC Integrations download required reference ``VrcOScIntegrations.dll`` from https://github.com/Killers0992/VrcOscIntegrations/releases/latest
+
 Template project can be found there: https://github.com/Killers0992/TemplateIntegration
+
+If your project is compiled you can take your dll and put in ``MyDocuments/VrcOscIntegrations/Integrations`` and then
+restart application itself if you want to load your integration.
