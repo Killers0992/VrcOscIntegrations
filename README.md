@@ -21,10 +21,9 @@ Application which contains OSC integrations for vrchat in one place.
 
 # Configs
 
-Main config ``config.yml`` for application can be found in location where executable file is stored.
+Main config ``config.yml`` for application can be found in MyDocuments -> VrcOscIntegrations.
 
-If you want to configure stuff manually for installed integration goto to your location where executable file ``VrcOscIntegrations.exe`` is stored,
-open ``Integrations`` -> ``<Integration Name>`` -> ``config.yml``
+If you want to configure stuff manually for installed integration goto to ``MyDocuments`` -> ``VrcOscIntegration`` -> ``Integrations`` -> ``<Integration Name>`` -> ``config.yml``
 
 # Using VrcOscIntegration app for your osc apps.
 
