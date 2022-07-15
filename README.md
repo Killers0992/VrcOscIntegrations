@@ -7,10 +7,12 @@ Application which contains OSC integrations for vrchat in one place.
 
 # Installation
 
-1. Download ``VrcOscIntegrations.exe`` from https://github.com/Killers0992/VrcOscIntegrations/releases/latest
-2. Goto tab ``Integrations Browser`` install integration which you want.
-3. Installed application should be in ``My Integrations`` tab.
-4. In box which contains your installed integration name click ``View`` to show user interface for this integration.
+1. Download ``VrcOscIntegrations.exe`` from <https://github.com/Killers0992/VrcOscIntegrations/releases/latest>
+2. Launch downloaded exe and wait.
+ ( everything is stored in My Documents/VrcOscIntegrations folder )
+3. Goto tab ``Integrations Browser`` install integration which you want.
+4. Installed application should be in ``My Integrations`` tab.
+5. In box which contains your installed integration name click ``View`` to show user interface for this integration.
 
 # Avaliable integrations
 
