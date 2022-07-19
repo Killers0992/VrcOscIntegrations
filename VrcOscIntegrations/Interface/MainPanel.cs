@@ -24,7 +24,7 @@ namespace VrcOscIntegrations.Interface
         public static bool IsLoaded;
         public static PanelVersion CurrentVersion = new PanelVersion()
         {
-            Version = "1.0.6"
+            Version = "1.0.7"
         };
 
         private PoisonTaskWindow _updatesWindow;
@@ -139,6 +139,7 @@ namespace VrcOscIntegrations.Interface
                     MinimizeBox = false,
                     MaximizeBox = false,
                     Movable = true,
+
                     WindowState = FormWindowState.Normal,
                 };
                 _updatesWindow.Controls[0].Parent = _updatesWindow;

@@ -7,7 +7,7 @@ namespace VrcOscIntegrations.Models
         [YamlMember(Description = "Name of OSC action.")]
         public string ActionName { get; set; } = "/avatar/parameters/VRCEmote";
         [YamlMember(Description = "How long in seconds that action is executed. ( 0 means instant )")]
-        public int ExecutionDuration { get; set; } = 3;
+        public double ExecutionDuration { get; set; } = 3;
 
         DateTime _assignedTime;
         public DateTime AssignedTime

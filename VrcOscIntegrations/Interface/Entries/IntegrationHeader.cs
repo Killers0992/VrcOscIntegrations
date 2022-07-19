@@ -47,5 +47,18 @@ namespace VrcOscIntegrations.Interface.Entries
                 inter.Visible = true;
             }
         }
+
+        private void poisonComboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            switch (poisonComboBox1.SelectedIndex)
+            {
+                case 0:
+                    Process.Start(new ProcessStartInfo(Path.Combine(IntegrationsManager.Integrations[IntegrationId].IntegrationPath, "config.yml")) { UseShellExecute = true });
+                    break;
+                case 1:
+                    Process.Start(new ProcessStartInfo(IntegrationsManager.Integrations[IntegrationId].IntegrationPath) { UseShellExecute = true });
+                    break;
+            }
+        }
     }
 }

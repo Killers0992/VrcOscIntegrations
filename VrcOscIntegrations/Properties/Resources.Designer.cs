@@ -63,10 +63,20 @@ namespace VrcOscIntegrations.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap vrc {
+        internal static System.Drawing.Bitmap app_icon {
             get {
-                object obj = ResourceManager.GetObject("vrc", resourceCulture);
+                object obj = ResourceManager.GetObject("app-icon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon icon {
+            get {
+                object obj = ResourceManager.GetObject("icon", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
             }
         }
     }

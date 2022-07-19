@@ -2,9 +2,10 @@
 
     <PropertyGroup>
         <OutputType>WinExe</OutputType>
-        <TargetFramework>net6.0-windows10.0.17763.0</TargetFramework>
+        <TargetFramework>net6.0-windows</TargetFramework>
         <UseWindowsForms>true</UseWindowsForms>
         <ImplicitUsings>enable</ImplicitUsings>
+        <ApplicationIcon>Resources\app-icon.ico</ApplicationIcon>
     </PropertyGroup>
 
     <ItemGroup>
@@ -16,21 +17,21 @@
       <_WebToolingArtifacts Remove="Properties\PublishProfiles\Windows.pubxml" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Content Include="Resources\app-icon.ico" />
+    </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="CoreOSC" Version="1.0.0" />
     <PackageReference Include="Microsoft.Toolkit.Uwp.Notifications" Version="7.1.2" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="ReaLTaiizor" Version="3.7.8.5" />
+    <PackageReference Include="ReaLTaiizor" Version="3.7.8.6" />
     <PackageReference Include="YamlDotNet" Version="11.2.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Interface\Entries\UpdateNotify.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Interface\MainPanel.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Update="Interface\Entries\UpdateNotify.cs" />
+    <Compile Update="Interface\MainPanel.cs" />
     <Compile Update="Properties\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
