@@ -90,8 +90,10 @@
             this.poisonComboBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.poisonComboBox1.BackColor = System.Drawing.Color.Black;
             this.poisonComboBox1.FontSize = ReaLTaiizor.Extension.Poison.PoisonComboBoxSize.Small;
             this.poisonComboBox1.FontWeight = ReaLTaiizor.Extension.Poison.PoisonComboBoxWeight.Bold;
+            this.poisonComboBox1.ForeColor = System.Drawing.Color.Black;
             this.poisonComboBox1.FormattingEnabled = true;
             this.poisonComboBox1.ItemHeight = 19;
             this.poisonComboBox1.Items.AddRange(new object[] {

@@ -14,7 +14,7 @@ namespace VrcOscIntegrations.Interface.Entries
             nextUpdate.Visible = _updates.Count > 1;
             previousUpdate.Visible = _updates.Count > 1;
             updatesCount.Text = _updates.Count.ToString();
-            updatesText.Text = _updates.Count > 1 ? "Found    updates !" : "Found    update !";
+            updatesText.Text = _updates.Count > 1 ? "Found      updates !" : "Found      update !";
             RenderUpdate(_updates[0]);
         }
 

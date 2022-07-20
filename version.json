@@ -1,8 +1,6 @@
 {
-  "Version": "1.0.7",
+  "Version": "1.0.8",
   "Changelogs": [
-    "- OSC events can be executed in less than second!",
-    "- Added dropdown to open integration config/folder in Integration View.",
-    "- Added missing app icons."
+    "- Fix text spacing in update window."
   ]
 }

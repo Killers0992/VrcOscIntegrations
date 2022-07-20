@@ -55,7 +55,7 @@
             this.updatesText.Size = new System.Drawing.Size(216, 23);
             this.updatesText.Style = ReaLTaiizor.Enum.Poison.ColorStyle.Teal;
             this.updatesText.TabIndex = 0;
-            this.updatesText.Text = "Found    updates !";
+            this.updatesText.Text = "Found      updates !";
             this.updatesText.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.updatesText.Theme = ReaLTaiizor.Enum.Poison.ThemeStyle.Dark;
             // 
@@ -205,9 +205,9 @@
             this.updatesCount.FontSize = ReaLTaiizor.Extension.Poison.PoisonLabelSize.Tall;
             this.updatesCount.Location = new System.Drawing.Point(127, 17);
             this.updatesCount.Name = "updatesCount";
-            this.updatesCount.Size = new System.Drawing.Size(21, 25);
+            this.updatesCount.Size = new System.Drawing.Size(18, 25);
             this.updatesCount.TabIndex = 13;
-            this.updatesCount.Text = "0";
+            this.updatesCount.Text = "1";
             this.updatesCount.Theme = ReaLTaiizor.Enum.Poison.ThemeStyle.Dark;
             // 
             // done
