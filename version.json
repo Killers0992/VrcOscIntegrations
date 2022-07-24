@@ -1,6 +1,6 @@
 {
-  "Version": "1.0.8",
+  "Version": "1.0.9",
   "Changelogs": [
-    "- Fix text spacing in update window."
+    "- Fixed update window not displaying on center of screen."
   ]
 }

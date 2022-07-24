@@ -42,7 +42,7 @@ namespace VrcOscIntegrations.Services
             else if (obj is double _double)
                 await _sender.SendMessageAsync(new OscMessage(new Address(action), new object[] { (float)_double }));
             else if (obj is bool _bool)
-                await _sender.SendMessageAsync(new OscMessage(new Address(action), new object[] { _bool }));
+                await _sender.SendMessageAsync(new OscMessage(new Address(action), new object[] { _bool ? OscTrue.True : OscFalse.False }));
         }
 
         public async Task TryExecuting()
@@ -72,7 +72,7 @@ namespace VrcOscIntegrations.Services
                     }
 
                     newAction.AssignedTime = DateTime.Now;
-                    Logger.Debug("OscActions", $"Execution time for action {action.Key} ends in {(int)(newAction.ExecutionTime - DateTime.Now).TotalSeconds} seconds", Color.Yellow, Color.White);
+                    Logger.Debug("OscActions", $"Execution time for action {action.Key} ends in {(newAction.ExecutionTime - DateTime.Now).TotalSeconds} seconds", Color.Yellow, Color.White);
                     CurrentlyRunningActions.TryAdd(action.Key, newAction);
                 }
             }

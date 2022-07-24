@@ -24,7 +24,7 @@ namespace VrcOscIntegrations.Interface
         public static bool IsLoaded;
         public static PanelVersion CurrentVersion = new PanelVersion()
         {
-            Version = "1.0.8"
+            Version = "1.0.9"
         };
 
         private PoisonTaskWindow _updatesWindow;
@@ -135,19 +135,26 @@ namespace VrcOscIntegrations.Interface
                 _updatesWindow = new PoisonTaskWindow(0, new UpdateNotify(AutoUpdater.PendingUpdates.Values.ToList()))
                 {
                     Text = "Found new updates...",
+
                     Resizable = false,
                     MinimizeBox = false,
                     MaximizeBox = false,
+
                     Movable = true,
+
+                    StartPosition = FormStartPosition.CenterScreen,
+
+                    CustomSize = true,
+                    Size = new Size(345, 460),
+
+                    Theme = ThemeStyle.Dark,
+                    Style = ColorStyle.Teal,
 
                     WindowState = FormWindowState.Normal,
                 };
                 _updatesWindow.Controls[0].Parent = _updatesWindow;
 
-                _updatesWindow.Theme = ReaLTaiizor.Enum.Poison.ThemeStyle.Dark;
-                _updatesWindow.Style = ReaLTaiizor.Enum.Poison.ColorStyle.Teal;
                 _updatesWindow.Show();
-                _updatesWindow.Size = new System.Drawing.Size(345, 460);
                 AutoUpdater.PendingUpdates.Clear();
             };
         }
