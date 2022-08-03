@@ -1,6 +1,6 @@
 {
-  "Version": "1.0.9",
+  "Version": "1.1.0",
   "Changelogs": [
-    "- Fixed update window not displaying on center of screen."
+    "- Fixed OSC actions not being deserialized properly from configs."
   ]
 }

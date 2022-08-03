@@ -4,6 +4,27 @@ namespace VrcOscIntegrations
 {
     public static class Extensions
     {
+        public static object ConvertStringToObject(this object obj)
+        {
+            if (obj.GetType() != typeof(string)) return obj;
+
+            string str = (string)obj;
+
+            if (bool.TryParse(str, out bool b))
+            {
+                return b;
+            }
+            else if (int.TryParse(str, out int i))
+            {
+                return i;
+            }
+            else if (double.TryParse(str, out double d))
+            {
+                return d;
+            }
+            return null;
+        }
+
         public static void CopyProperties(this object target, object source)
         {
             Type type = target.GetType();

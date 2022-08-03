@@ -1,4 +1,6 @@
 ﻿
+using YamlDotNet.Serialization.TypeResolvers;
+
 namespace VrcOscIntegrations
 {
     public class YDS
@@ -12,6 +14,7 @@ namespace VrcOscIntegrations
 			.WithNamingConvention(UnderscoredNamingConvention.Instance)
 			.IgnoreFields()
 			.IgnoreUnmatchedProperties()
+			.WithTypeConverter(new ObjectConverter())
 			.Build();
 	}
 }
