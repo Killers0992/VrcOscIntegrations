@@ -18,7 +18,6 @@ namespace VrcOscIntegrations.Models
             }
         }
 
-
         [YamlIgnore]
         public OscMessage RawMessage { get; set; }
 
