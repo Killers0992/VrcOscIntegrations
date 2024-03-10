@@ -2,9 +2,6 @@
 # VRC OSC Integrations
 Application which contains OSC integrations for vrchat in one place.
 
-[![Discord Banner](https://discordapp.com/api/guilds/948581245527425114/widget.png?style=banner3)](https://discord.gg/uhvsaEFmSE)
-
-
 # Installation
 
 1. Download ``VrcOscIntegrations.exe`` from <https://github.com/Killers0992/VrcOscIntegrations/releases/latest>
