@@ -1,6 +1,7 @@
 {
-  "Version": "1.1.0",
+  "Version": "1.1.1",
   "Changelogs": [
-    "- Fixed OSC actions not being deserialized properly from configs."
+    "- Fixed error thrown when OSC Receiver tries to use port which is already used preventing integrations from being loaded.",
+    "- Fixed timing in OscOutAction.cs ( PR#1 by Merk787 )"
   ]
 }
