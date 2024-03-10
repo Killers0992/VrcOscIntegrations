@@ -14,7 +14,7 @@ namespace VrcOscIntegrations.Models
         {
             set
             {
-                _assignedTime = value.AddMilliseconds(ExecutionDuration);
+                _assignedTime = value.AddSeconds(ExecutionDuration);
             }
         }
 
