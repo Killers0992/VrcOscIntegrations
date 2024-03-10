@@ -96,19 +96,29 @@ namespace VrcOscIntegrations.Services
         {
             _sender = new UdpClient();
 
+            List<Task> tasks = new List<Task>()
+            {
+                Runner1()
+            };
+
             _senderEndpoint = new IPEndPoint(IPAddress.Parse(MainConfig.Instance.OscClient.IpAddress), MainConfig.Instance.OscClient.Port);
             Logger.Info("OscSender", $"Connect to IP: {MainConfig.Instance.OscClient.IpAddress}, Port: {MainConfig.Instance.OscClient.Port}.", Color.Yellow, Color.White);
             _sender.Connect(_senderEndpoint);
 
-            _receiverEndpoint = new IPEndPoint(IPAddress.Parse(MainConfig.Instance.OscServer.IpAddress), MainConfig.Instance.OscServer.Port);
-            Logger.Info("OscReceiver", $"Start listening on IP: {MainConfig.Instance.OscServer.IpAddress}, Port: 9001.", Color.Yellow, Color.White);
-            _receiver = new UdpClient(_receiverEndpoint);
-
-            await Task.WhenAll(new Task[]
+            try
             {
-                Runner1(),
-                Runner2()
-            });
+                _receiverEndpoint = new IPEndPoint(IPAddress.Parse(MainConfig.Instance.OscServer.IpAddress), MainConfig.Instance.OscServer.Port);
+                Logger.Info("OscReceiver", $"Start listening on IP: {MainConfig.Instance.OscServer.IpAddress}, Port: {MainConfig.Instance.OscServer.Port}.", Color.Yellow, Color.White);
+                _receiver = new UdpClient(_receiverEndpoint);
+
+                tasks.Add(Runner2());
+            }
+            catch(Exception ex)
+            {
+                Logger.Error("OscReceiver", $"Error thrown while trying to listen on port {MainConfig.Instance.OscServer.Port}, error {ex}", Color.Yellow, Color.Red);
+            }
+
+            await Task.WhenAll(tasks);
         }
 
         private async Task Runner1()
